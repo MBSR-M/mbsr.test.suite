@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="csrf-token" content="{{ csrf_token|default('') }}">
+  <title>Sign in · OpenGrid Loss</title>
+  <script src="/static/app.js"></script>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body class="login-body">
+  <main class="login-layout">
+    <section class="login-intro" aria-label="OpenGrid Loss">
+      <a class="brand" href="/login"><span class="brand-mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="brand-text">OpenGrid <strong>Loss</strong><small>ENERGY OPERATIONS</small></span></a>
+      <div class="login-intro-copy"><p class="eyebrow">CLARITY ACROSS YOUR NETWORK</p><h1>From energy measurements<br>to actionable evidence.</h1><p>Account for every interval. Understand anomalies. Coordinate investigations with a complete record of the evidence.</p></div>
+      <div class="login-network" aria-hidden="true"><div class="login-network-node">FEEDER</div><div class="login-network-line"></div><div class="login-network-node emphasized">TRANSFORMER</div><div class="login-network-branches"><span>METER</span><span>METER</span><span>METER</span></div></div>
+      <p class="login-intro-footer">Measured. Accounted. Explained.</p>
+    </section>
+    <section class="login-form-panel" aria-labelledby="login-title">
+      <div class="login-theme"><label><span class="visually-hidden">Color theme</span><select data-theme-select aria-label="Color theme"><option value="system">System theme</option><option value="light">Light theme</option><option value="dark">Dark theme</option></select></label></div>
+      <div class="login-form-content"><p class="eyebrow">OPERATOR ACCESS</p><h2 id="login-title">Sign in to your workspace</h2><p class="muted">Use your OpenGrid Loss account to continue.</p>
+      {% if error|default('') %}<div class="notice notice-danger" role="alert">{{ error }}</div>{% endif %}
+      <form method="post" action="/login" class="login-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token|default('') }}">
+        <input type="hidden" name="next" value="{{ next|default('/dashboard') }}">
+        <div class="form-group"><label for="username">Username</label><input id="username" name="username" type="text" autocomplete="username" maxlength="100" required autofocus value="{{ username|default('') }}"></div>
+        <div class="form-group"><label for="password">Password</label><div class="password-field"><input id="password" name="password" type="password" autocomplete="current-password" maxlength="1024" required><button class="password-toggle" type="button" data-password-toggle="password" aria-label="Show password" aria-pressed="false">Show</button></div></div>
+        <button class="button button-primary button-block" type="submit">Sign in <span aria-hidden="true">→</span></button>
+      </form><p class="login-help">Need access? Contact your workspace administrator.</p></div>
+      <p class="login-form-footer">OpenGrid Loss · Energy accounting & investigation</p>
+    </section>
+  </main>
+</body>
+</html>

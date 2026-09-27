@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "feeder_id": 12,
+  "feeder_code": "FDR-12",
+  "name": "Industrial Feeder 12",
+  "substation": null,
+  "active": true,
+  "transformer_count": 1,
+  "meter_count": 5,
+  "created_at": null,
+  "updated_at": null,
+  "metadata_unavailable_reason": "Creation/update and substation metadata are not stored in legacy MVP."
+}

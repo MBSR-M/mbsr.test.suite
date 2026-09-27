@@ -1,0 +1,199 @@
+name: open-grid-loss
+x-app: &app
+  build: .
+  image: opengrid-loss:local
+  restart: unless-stopped
+  environment: &environment
+    DATABASE_URL: mysql+pymysql://openami:${MYSQL_PASSWORD:?set MYSQL_PASSWORD}@mysql/open_grid_loss
+    KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    RABBITMQ_HOST: rabbitmq
+    RABBITMQ_USER: openami
+    RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?set RABBITMQ_PASSWORD}
+    API_KEY: ${API_KEY:?set API_KEY}
+    READ_API_KEY: ${READ_API_KEY:?set READ_API_KEY}
+    PUBLIC_READS: ${PUBLIC_READS:-false}
+    BASELINE_MIN_SAMPLES: ${BASELINE_MIN_SAMPLES:-14}
+    ALLOWED_LATENESS_MINUTES: ${ALLOWED_LATENESS_MINUTES:-30}
+    UI_SECURE_COOKIES: ${UI_SECURE_COOKIES:-false}
+    UI_DEMO_ENABLED: ${UI_DEMO_ENABLED:-true}
+    GRAFANA_URL: ${GRAFANA_URL:-http://localhost:3000}
+  depends_on:
+    initialize:
+      condition: service_completed_successfully
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: '3'
+
+services:
+  kafka-volume-init:
+    image: opengrid-loss:local
+    user: '0:0'
+    command: ['python', '-c', "import os; os.chown('/kafka', 1000, 1000)"]
+    volumes: [kafka-data:/kafka]
+    restart: 'no'
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: open_grid_loss
+      MYSQL_USER: openami
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD}
+    command: ['--default-time-zone=+00:00']
+    volumes: [mysql-data:/var/lib/mysql]
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h localhost -u root -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  kafka:
+    image: apache/kafka:4.1.0
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+    volumes: [kafka-data:/tmp/kraft-combined-logs]
+    depends_on:
+      kafka-volume-init: {condition: service_completed_successfully}
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', '/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null']
+      interval: 10s
+      timeout: 10s
+      retries: 30
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    environment:
+      RABBITMQ_DEFAULT_USER: openami
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?set RABBITMQ_PASSWORD}
+    volumes: [rabbit-data:/var/lib/rabbitmq]
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 10s
+      timeout: 10s
+      retries: 20
+  migrate:
+    <<: *app
+    restart: 'no'
+    command: ['alembic', 'upgrade', 'head']
+    depends_on:
+      mysql: {condition: service_healthy}
+  initialize:
+    <<: *app
+    restart: 'no'
+    command: ['python', '-m', 'opengrid.bootstrap']
+    environment:
+      <<: *environment
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:?set GRAFANA_DB_PASSWORD}
+      UI_ADMIN_USERNAME: ${UI_ADMIN_USERNAME:-}
+      UI_ADMIN_PASSWORD: ${UI_ADMIN_PASSWORD:-}
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      kafka: {condition: service_healthy}
+      rabbitmq: {condition: service_healthy}
+  api:
+    <<: *app
+    environment:
+      <<: *environment
+      SERVICE: api
+    ports: ['127.0.0.1:8000:8000']
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+  ingestion:
+    <<: *app
+    environment:
+      <<: *environment
+      SERVICE: ingestion
+    ports: ['127.0.0.1:8001:8000']
+    healthcheck:
+      test: ['CMD', 'python', '-c', "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+  quality-worker:
+    <<: *app
+    command: ['python', '-m', 'opengrid.worker', 'quality']
+    environment:
+      <<: *environment
+      SERVICE: quality
+    healthcheck: &worker-health
+      test: ['CMD', 'python', '-m', 'opengrid.healthcheck']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+  aggregation-worker:
+    <<: *app
+    command: ['python', '-m', 'opengrid.worker', 'aggregation']
+    environment:
+      <<: *environment
+      SERVICE: aggregation
+    healthcheck: *worker-health
+  loss-worker:
+    <<: *app
+    command: ['python', '-m', 'opengrid.worker', 'loss']
+    environment:
+      <<: *environment
+      SERVICE: loss
+    healthcheck: *worker-health
+  anomaly-worker:
+    <<: *app
+    command: ['python', '-m', 'opengrid.worker', 'anomaly']
+    environment:
+      <<: *environment
+      SERVICE: anomaly
+    healthcheck: *worker-health
+  grafana:
+    image: grafana/grafana:12.2.0
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?set GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_AUTH_ANONYMOUS_ENABLED: 'false'
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD:?set GRAFANA_DB_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports: ['127.0.0.1:3000:3000']
+    depends_on:
+      initialize: {condition: service_completed_successfully}
+    restart: unless-stopped
+  simulator:
+    <<: *app
+    profiles: [tools]
+    restart: 'no'
+    command: ['python', '-m', 'opengrid.simulator']
+    depends_on:
+      api: {condition: service_healthy}
+      ingestion: {condition: service_healthy}
+  test:
+    <<: *app
+    profiles: [tools]
+    restart: 'no'
+    command: ['pytest', '-q', '-m', 'not integration and not e2e']
+    environment:
+      <<: *environment
+      GRAFANA_PASSWORD: ${GRAFANA_PASSWORD:?set GRAFANA_PASSWORD}
+
+volumes:
+  mysql-data:
+  kafka-data:
+  rabbit-data:
+  grafana-data:

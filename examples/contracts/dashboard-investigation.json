@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "investigation_id": 182,
+  "case_no": "CASE-2026-00182",
+  "entity_type": "TRANSFORMER",
+  "entity_id": 47,
+  "entity_display_name": "DT-1047",
+  "priority_score": "72.5",
+  "severity": "HIGH",
+  "estimated_unaccounted_kwh": "18.7",
+  "status": "INVESTIGATING",
+  "assigned_to": "investigator",
+  "opened_at": "2026-09-27T10:15:00Z"
+}

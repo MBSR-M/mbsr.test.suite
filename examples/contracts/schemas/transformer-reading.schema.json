@@ -1,0 +1,199 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "event_id": {
+      "format": "uuid",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "measurement_kind": {
+      "const": "CUMULATIVE_REGISTER",
+      "default": "CUMULATIVE_REGISTER",
+      "title": "Measurement Kind",
+      "type": "string"
+    },
+    "reading_time": {
+      "description": "Time the device measured the register, not ingestion time.",
+      "title": "Reading Time",
+      "type": "string"
+    },
+    "received_at": {
+      "description": "Time OpenGrid/HES received the measurement.",
+      "title": "Received At",
+      "type": "string"
+    },
+    "processed_at": {
+      "anyOf": [
+        {
+          "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Successful processing time; null before processing.",
+      "title": "Processed At"
+    },
+    "energy_import_total_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Energy Import Total Kwh",
+      "type": "string"
+    },
+    "energy_export_total_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Energy Export Total Kwh",
+      "type": "string"
+    },
+    "import_power_kw": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Import Power Kw"
+    },
+    "export_power_kw": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Export Power Kw"
+    },
+    "voltage_avg_v": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 100000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Voltage Avg V"
+    },
+    "current_avg_a": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 100000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Current Avg A"
+    },
+    "frequency_avg_hz": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 1000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Frequency Avg Hz"
+    },
+    "source": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    },
+    "source_metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Adapter provenance, including any explicit import-only export-register transformation.",
+      "title": "Source Metadata",
+      "type": "object"
+    },
+    "energy_basis": {
+      "default": "REGISTER_SECONDARY",
+      "enum": [
+        "PRIMARY",
+        "REGISTER_SECONDARY"
+      ],
+      "title": "Energy Basis",
+      "type": "string"
+    },
+    "register_epoch": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Register Epoch",
+      "type": "string"
+    },
+    "revision": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "transformer_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Transformer Id",
+      "type": "integer"
+    },
+    "transformer_code": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Transformer Code"
+    }
+  },
+  "required": [
+    "event_id",
+    "reading_time",
+    "received_at",
+    "energy_import_total_kwh",
+    "energy_export_total_kwh",
+    "source",
+    "register_epoch",
+    "transformer_id"
+  ],
+  "title": "TransformerReadingContract",
+  "type": "object"
+}

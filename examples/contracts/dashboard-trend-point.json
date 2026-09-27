@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "input_energy_kwh": "100",
+  "downstream_energy_kwh": "81.3",
+  "accounting_difference_kwh": "18.7",
+  "accounting_difference_percent": "18.7",
+  "input_energy_source": "DERIVED",
+  "downstream_energy_source": "DERIVED",
+  "accounting_difference_source": "DERIVED",
+  "energy_availability": "AVAILABLE",
+  "energy_basis": "NET_IMPORT",
+  "availability_reason": null,
+  "timestamp": "2026-09-27T10:00:00Z",
+  "data_completeness_percent": "100",
+  "anomaly_count": 1
+}

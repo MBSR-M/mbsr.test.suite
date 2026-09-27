@@ -1,0 +1,59 @@
+{
+  "$defs": {
+    "EnergySource": {
+      "enum": [
+        "MEASURED",
+        "DERIVED",
+        "ESTIMATED",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergySource",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Energy Kwh"
+    },
+    "source": {
+      "$ref": "#/$defs/EnergySource"
+    },
+    "unavailable_reason": {
+      "anyOf": [
+        {
+          "maxLength": 255,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unavailable Reason"
+    }
+  },
+  "required": [
+    "energy_kwh",
+    "source"
+  ],
+  "title": "OptionalEnergyContract",
+  "type": "object"
+}

@@ -1,0 +1,128 @@
+{
+  "$defs": {
+    "EntityType": {
+      "enum": [
+        "METER",
+        "TRANSFORMER"
+      ],
+      "title": "EntityType",
+      "type": "string"
+    },
+    "InvestigationStatus": {
+      "enum": [
+        "NEW",
+        "ASSIGNED",
+        "INVESTIGATING",
+        "RESOLVED",
+        "DISMISSED"
+      ],
+      "title": "InvestigationStatus",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "NORMAL",
+        "WATCH",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "investigation_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Investigation Id",
+      "type": "integer"
+    },
+    "case_no": {
+      "maxLength": 40,
+      "minLength": 1,
+      "title": "Case No",
+      "type": "string"
+    },
+    "entity_type": {
+      "$ref": "#/$defs/EntityType"
+    },
+    "entity_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Entity Id",
+      "type": "integer"
+    },
+    "entity_display_name": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Entity Display Name",
+      "type": "string"
+    },
+    "priority_score": {
+      "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+      "ge": 0,
+      "le": 100,
+      "title": "Priority Score",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "estimated_unaccounted_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Estimated Unaccounted Kwh"
+    },
+    "status": {
+      "$ref": "#/$defs/InvestigationStatus"
+    },
+    "assigned_to": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Assigned To"
+    },
+    "opened_at": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Opened At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "investigation_id",
+    "case_no",
+    "entity_type",
+    "entity_id",
+    "entity_display_name",
+    "priority_score",
+    "severity",
+    "estimated_unaccounted_kwh",
+    "status",
+    "assigned_to",
+    "opened_at"
+  ],
+  "title": "DashboardInvestigationItemContract",
+  "type": "object"
+}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{{ error_title|default('Unable to complete the request') }}{% endblock %}
+{% block content %}
+<section class="error-state" aria-labelledby="error-title">
+  <div class="error-code">{{ status_code|default(500) }}</div>
+  <p class="eyebrow">REQUEST COULD NOT BE COMPLETED</p>
+  <h1 id="error-title">{{ error_title|default('Something went wrong') }}</h1>
+  <p>{{ error_message|default('The request could not be completed. Please try again shortly.') }}</p>
+  {% if request_id|default('') %}<p class="request-id">Request ID <code>{{ request_id }}</code></p>{% endif %}
+  <div class="page-actions"><a class="button button-primary" href="{% if user|default(none) %}/dashboard{% else %}/login{% endif %}">{% if user|default(none) %}Return to overview{% else %}Return to sign in{% endif %}</a><a class="button button-secondary" href="/system">View system health</a></div>
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "audit_id": 1,
+  "actor": "user:investigator",
+  "action": "INVESTIGATION_STATUS_CHANGED",
+  "entity_type": "INVESTIGATION",
+  "entity_id": 182,
+  "timestamp": "2026-09-27T10:15:00Z",
+  "old_value": {
+    "status": "ASSIGNED"
+  },
+  "new_value": {
+    "status": "INVESTIGATING"
+  },
+  "request_id": "724b3e6f-8db5-45ce-bbb0-20eb0e30f166"
+}

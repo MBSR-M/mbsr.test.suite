@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "period_start": "2026-09-27T10:00:00Z",
+  "period_end": "2026-09-27T10:15:00Z",
+  "completeness_percent": "100",
+  "expected_intervals": 5,
+  "received_intervals": 5,
+  "missing_intervals": 0,
+  "duplicate_intervals": null,
+  "late_intervals": 0,
+  "invalid_intervals": 0,
+  "affected_meter_count": 0,
+  "affected_transformer_count": 0,
+  "availability_reason": "Duplicate-retry counts are not persisted by the legacy ingestion endpoint."
+}

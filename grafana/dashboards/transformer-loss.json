@@ -1,0 +1,94 @@
+{
+  "uid": "opengrid-transformer-loss",
+  "title": "Transformer Accounting",
+  "schemaVersion": 39,
+  "version": 1,
+  "timezone": "utc",
+  "refresh": "30s",
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Accounting results",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT transformer_code, start, input_kwh, downstream_kwh, accounting_difference_kwh, accounting_difference_percent, completeness, status FROM v_balance WHERE $__timeFilter(start) ORDER BY start DESC LIMIT 1000",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "transformer_code"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transformer detail",
+                    "url": "/d/opengrid-transformer-drilldown?var-transformer=${__value.raw}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "transformer",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='TRANSFORMER' ORDER BY code",
+        "refresh": 1
+      },
+      {
+        "name": "meter",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='METER' ORDER BY code",
+        "refresh": 1
+      }
+    ]
+  },
+  "links": [
+    {
+      "type": "dashboards",
+      "title": "OpenGrid dashboards",
+      "tags": [
+        "opengrid"
+      ]
+    }
+  ],
+  "tags": [
+    "opengrid"
+  ]
+}

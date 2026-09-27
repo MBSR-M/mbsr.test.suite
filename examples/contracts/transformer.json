@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "transformer_id": 47,
+  "transformer_code": "DT-1047",
+  "feeder_id": 12,
+  "name": null,
+  "capacity_kva": null,
+  "latitude": null,
+  "longitude": null,
+  "meter_count": 5,
+  "active": true
+}

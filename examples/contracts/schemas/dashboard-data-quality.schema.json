@@ -1,0 +1,168 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "period_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Period Start",
+      "type": "string"
+    },
+    "period_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Period End",
+      "type": "string"
+    },
+    "completeness_percent": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Completeness Percent"
+    },
+    "expected_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Expected Intervals"
+    },
+    "received_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Received Intervals"
+    },
+    "missing_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Missing Intervals"
+    },
+    "duplicate_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Duplicate Intervals"
+    },
+    "late_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Late Intervals"
+    },
+    "invalid_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Invalid Intervals"
+    },
+    "affected_meter_count": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Affected Meter Count"
+    },
+    "affected_transformer_count": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Affected Transformer Count"
+    },
+    "availability_reason": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Availability Reason"
+    }
+  },
+  "required": [
+    "period_start",
+    "period_end",
+    "completeness_percent",
+    "expected_intervals",
+    "received_intervals",
+    "missing_intervals",
+    "duplicate_intervals",
+    "late_intervals",
+    "invalid_intervals",
+    "affected_meter_count",
+    "affected_transformer_count"
+  ],
+  "title": "DashboardDataQualityContract",
+  "type": "object"
+}

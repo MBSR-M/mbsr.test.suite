@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "investigation_id": 182,
+  "case_no": "CASE-2026-00182",
+  "entity_type": "TRANSFORMER",
+  "entity_id": 47,
+  "anomaly_id": 82,
+  "priority_score": "72.5",
+  "estimated_unaccounted_kwh": "18.7",
+  "status": "INVESTIGATING",
+  "assigned_to": "investigator",
+  "opened_at": "2026-09-27T10:15:00Z",
+  "closed_at": null,
+  "resolution": null,
+  "version": 3,
+  "evidence": {
+    "schema_version": 1,
+    "current_imbalance_percent": "18.7",
+    "baseline_imbalance_percent": "7.2",
+    "deviation_percentage_points": "11.5",
+    "persistent_intervals": 4,
+    "data_completeness_percent": "100",
+    "affected_meter_count": 1,
+    "communication_failures": 0,
+    "relevant_event_count": 2,
+    "components": {
+      "schema_version": 1,
+      "loss_deviation": "0.575",
+      "persistence": "0.666667",
+      "data_completeness": "1",
+      "consumption_anomaly": "0.2",
+      "event_correlation": "0.666667"
+    },
+    "details": {
+      "intervals_required": 4,
+      "window_intervals": 6
+    }
+  }
+}

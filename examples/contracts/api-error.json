@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "error": {
+    "schema_version": 1,
+    "code": "METER_NOT_FOUND",
+    "message": "Meter does not exist",
+    "details": {},
+    "request_id": "724b3e6f-8db5-45ce-bbb0-20eb0e30f166"
+  }
+}

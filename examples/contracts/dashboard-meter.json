@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "meter_id": 234,
+  "meter_no": "M100234",
+  "transformer_id": 47,
+  "transformer_code": "DT-1047",
+  "anomaly_type": "CONSUMPTION_DROP",
+  "current_consumption_kwh": "0.31",
+  "baseline_consumption_kwh": "1",
+  "deviation_percent": "-69",
+  "data_completeness_percent": "100",
+  "anomaly_score": "70",
+  "severity": "HIGH",
+  "last_reading_time": "2026-09-27T10:15:00Z"
+}

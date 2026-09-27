@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "interval_start": "2026-09-27T10:00:00Z",
+  "interval_end": "2026-09-27T10:15:00Z",
+  "interval_minutes": 15,
+  "transformer_id": 47,
+  "transformer_input_energy_kwh": "100",
+  "downstream_meter_energy_kwh": "81.3",
+  "accounting_difference_kwh": "18.7",
+  "accounting_difference_percent": "18.7",
+  "expected_meter_count": 5,
+  "valid_meter_count": 5,
+  "data_completeness_percent": "100",
+  "confidence_score": "100",
+  "energy_availability": "AVAILABLE",
+  "energy_basis": "NET_IMPORT",
+  "availability_reason": null
+}

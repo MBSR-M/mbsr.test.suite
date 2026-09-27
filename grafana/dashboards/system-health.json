@@ -1,0 +1,76 @@
+{
+  "uid": "opengrid-system-health",
+  "title": "System Health",
+  "schemaVersion": 39,
+  "version": 1,
+  "timezone": "utc",
+  "refresh": "30s",
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Worker heartbeats",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT service, time, TIMESTAMPDIFF(SECOND,time,UTC_TIMESTAMP()) age_seconds, processed FROM v_system",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "transformer",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='TRANSFORMER' ORDER BY code",
+        "refresh": 1
+      },
+      {
+        "name": "meter",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='METER' ORDER BY code",
+        "refresh": 1
+      }
+    ]
+  },
+  "links": [
+    {
+      "type": "dashboards",
+      "title": "OpenGrid dashboards",
+      "tags": [
+        "opengrid"
+      ]
+    }
+  ],
+  "tags": [
+    "opengrid"
+  ]
+}

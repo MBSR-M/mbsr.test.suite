@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "meter_id": 234,
+  "meter_no": "M100234",
+  "transformer_id": 47,
+  "name": null,
+  "consumer_type": null,
+  "phase": null,
+  "sanctioned_load_kw": null,
+  "active": true
+}

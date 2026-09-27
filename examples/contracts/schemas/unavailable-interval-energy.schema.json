@@ -1,0 +1,89 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "interval_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval Start",
+      "type": "string"
+    },
+    "interval_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval End",
+      "type": "string"
+    },
+    "interval_minutes": {
+      "const": 15,
+      "default": 15,
+      "title": "Interval Minutes",
+      "type": "integer"
+    },
+    "entity_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Entity Id",
+      "type": "integer"
+    },
+    "entity_type": {
+      "enum": [
+        "METER",
+        "TRANSFORMER"
+      ],
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "import_energy_kwh": {
+      "default": null,
+      "title": "Import Energy Kwh",
+      "type": "null"
+    },
+    "export_energy_kwh": {
+      "default": null,
+      "title": "Export Energy Kwh",
+      "type": "null"
+    },
+    "availability": {
+      "const": "UNAVAILABLE",
+      "default": "UNAVAILABLE",
+      "title": "Availability",
+      "type": "string"
+    },
+    "calculation_status": {
+      "enum": [
+        "MISSING_START",
+        "MISSING_END",
+        "MISSING_BOTH",
+        "REGISTER_RESET",
+        "METER_REPLACED",
+        "INVALID",
+        "OUT_OF_ORDER",
+        "INVALID_MULTIPLIER",
+        "SOURCE_CONFLICT"
+      ],
+      "title": "Calculation Status",
+      "type": "string"
+    },
+    "unavailable_reason": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Unavailable Reason",
+      "type": "string"
+    }
+  },
+  "required": [
+    "interval_start",
+    "interval_end",
+    "entity_id",
+    "entity_type",
+    "calculation_status",
+    "unavailable_reason"
+  ],
+  "title": "UnavailableIntervalEnergyContract",
+  "type": "object"
+}

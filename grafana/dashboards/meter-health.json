@@ -1,0 +1,102 @@
+{
+  "uid": "opengrid-meter-health",
+  "title": "Meter Health",
+  "schemaVersion": 39,
+  "version": 1,
+  "timezone": "utc",
+  "refresh": "30s",
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Interval energy",
+      "type": "timeseries",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT start time, import_kwh, export_kwh FROM v_meter_energy WHERE code=${meter:sqlstring} AND $__timeFilter(start) ORDER BY start",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "title": "Quality",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT start, status FROM v_quality WHERE code=${meter:sqlstring} AND $__timeFilter(start) ORDER BY start DESC LIMIT 1000",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "transformer",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='TRANSFORMER' ORDER BY code",
+        "refresh": 1
+      },
+      {
+        "name": "meter",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='METER' ORDER BY code",
+        "refresh": 1
+      }
+    ]
+  },
+  "links": [
+    {
+      "type": "dashboards",
+      "title": "OpenGrid dashboards",
+      "tags": [
+        "opengrid"
+      ]
+    }
+  ],
+  "tags": [
+    "opengrid"
+  ]
+}

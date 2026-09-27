@@ -1,0 +1,128 @@
+{
+  "uid": "opengrid-transformer-drilldown",
+  "title": "Transformer Drilldown",
+  "schemaVersion": 39,
+  "version": 1,
+  "timezone": "utc",
+  "refresh": "30s",
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Input and downstream kWh",
+      "type": "timeseries",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT start time, input_kwh, downstream_kwh FROM v_balance WHERE $__timeFilter(start) AND transformer_code=${transformer:sqlstring} ORDER BY start",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "title": "Accounting difference and completeness",
+      "type": "timeseries",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT start time, accounting_difference_percent, completeness FROM v_balance WHERE $__timeFilter(start) AND transformer_code=${transformer:sqlstring} ORDER BY start",
+          "format": "time_series"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "title": "Evidence",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT start, severity, score, evidence FROM v_anomaly WHERE entity_code=${transformer:sqlstring} AND $__timeFilter(start) ORDER BY start DESC LIMIT 100",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "transformer",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='TRANSFORMER' ORDER BY code",
+        "refresh": 1
+      },
+      {
+        "name": "meter",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='METER' ORDER BY code",
+        "refresh": 1
+      }
+    ]
+  },
+  "links": [
+    {
+      "type": "dashboards",
+      "title": "OpenGrid dashboards",
+      "tags": [
+        "opengrid"
+      ]
+    }
+  ],
+  "tags": [
+    "opengrid"
+  ]
+}

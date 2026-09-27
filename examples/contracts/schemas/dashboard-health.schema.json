@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "healthy": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Healthy",
+      "type": "integer"
+    },
+    "watch": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Watch",
+      "type": "integer"
+    },
+    "high": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "High",
+      "type": "integer"
+    },
+    "critical": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Critical",
+      "type": "integer"
+    },
+    "unknown": {
+      "default": 0,
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Unknown",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "healthy",
+    "watch",
+    "high",
+    "critical"
+  ],
+  "title": "DashboardHealthDistributionContract",
+  "type": "object"
+}

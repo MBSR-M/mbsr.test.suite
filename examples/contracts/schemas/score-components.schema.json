@@ -1,0 +1,84 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "loss_deviation": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Loss Deviation"
+    },
+    "persistence": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Persistence"
+    },
+    "data_completeness": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Data Completeness"
+    },
+    "consumption_anomaly": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Consumption Anomaly"
+    },
+    "event_correlation": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "le": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event Correlation"
+    }
+  },
+  "title": "ScoreComponentsContract",
+  "type": "object"
+}

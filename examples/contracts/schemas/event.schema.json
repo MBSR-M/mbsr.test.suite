@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "EntityType": {
+      "enum": [
+        "METER",
+        "TRANSFORMER"
+      ],
+      "title": "EntityType",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "MeterEventType": {
+      "enum": [
+        "POWER_FAILURE",
+        "POWER_RESTORED",
+        "COMMUNICATION_FAILURE",
+        "COMMUNICATION_RESTORED",
+        "REGISTER_RESET",
+        "COVER_OPEN",
+        "MAGNETIC_FIELD"
+      ],
+      "title": "MeterEventType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "event_id": {
+      "format": "uuid",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "entity_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Entity Id",
+      "type": "integer"
+    },
+    "entity_type": {
+      "$ref": "#/$defs/EntityType"
+    },
+    "event_time": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Event Time",
+      "type": "string"
+    },
+    "event_type": {
+      "$ref": "#/$defs/MeterEventType"
+    },
+    "source": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    },
+    "evidence": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JsonValue"
+      },
+      "title": "Evidence",
+      "type": "object"
+    }
+  },
+  "required": [
+    "event_id",
+    "entity_id",
+    "entity_type",
+    "event_time",
+    "event_type",
+    "source"
+  ],
+  "title": "EventContract",
+  "type": "object"
+}

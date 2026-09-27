@@ -1,0 +1,174 @@
+{
+  "$defs": {
+    "EnergyAvailability": {
+      "enum": [
+        "AVAILABLE",
+        "PARTIAL",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergyAvailability",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "interval_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval Start",
+      "type": "string"
+    },
+    "interval_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval End",
+      "type": "string"
+    },
+    "interval_minutes": {
+      "const": 15,
+      "default": 15,
+      "title": "Interval Minutes",
+      "type": "integer"
+    },
+    "transformer_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Transformer Id",
+      "type": "integer"
+    },
+    "transformer_input_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Transformer Input Energy Kwh"
+    },
+    "downstream_meter_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Downstream Meter Energy Kwh"
+    },
+    "accounting_difference_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Kwh"
+    },
+    "accounting_difference_percent": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Percent"
+    },
+    "expected_meter_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Expected Meter Count",
+      "type": "integer"
+    },
+    "valid_meter_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Valid Meter Count",
+      "type": "integer"
+    },
+    "data_completeness_percent": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Completeness Percent"
+    },
+    "confidence_score": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Confidence Score"
+    },
+    "energy_availability": {
+      "$ref": "#/$defs/EnergyAvailability"
+    },
+    "energy_basis": {
+      "const": "NET_IMPORT",
+      "default": "NET_IMPORT",
+      "title": "Energy Basis",
+      "type": "string"
+    },
+    "availability_reason": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Availability Reason"
+    }
+  },
+  "required": [
+    "interval_start",
+    "interval_end",
+    "transformer_id",
+    "transformer_input_energy_kwh",
+    "downstream_meter_energy_kwh",
+    "accounting_difference_kwh",
+    "accounting_difference_percent",
+    "expected_meter_count",
+    "valid_meter_count",
+    "data_completeness_percent",
+    "confidence_score",
+    "energy_availability"
+  ],
+  "title": "TransformerEnergyBalanceContract",
+  "type": "object"
+}

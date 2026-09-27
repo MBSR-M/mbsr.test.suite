@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "previous_register_kwh": "12543.210",
+  "current_register_kwh": "12543.842",
+  "raw_delta_kwh": "0.632",
+  "meter_multiplier": "10",
+  "calculated_energy_kwh": "6.320",
+  "register_status": "NORMAL",
+  "recovery_policy": null
+}

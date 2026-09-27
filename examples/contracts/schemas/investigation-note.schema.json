@@ -1,0 +1,50 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "note_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Note Id",
+      "type": "integer"
+    },
+    "investigation_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Investigation Id",
+      "type": "integer"
+    },
+    "author": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Author",
+      "type": "string"
+    },
+    "note": {
+      "maxLength": 10000,
+      "minLength": 1,
+      "title": "Note",
+      "type": "string"
+    },
+    "created_at": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "note_id",
+    "investigation_id",
+    "author",
+    "note",
+    "created_at"
+  ],
+  "title": "InvestigationNoteContract",
+  "type": "object"
+}

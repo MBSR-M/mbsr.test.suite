@@ -1,0 +1,176 @@
+{
+  "$defs": {
+    "FeederContract": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "description": "Version of this canonical schema; unsupported versions fail closed.",
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "feeder_id": {
+          "description": "Existing internal numeric database identifier, distinct from operational code.",
+          "minimum": 1,
+          "title": "Feeder Id",
+          "type": "integer"
+        },
+        "feeder_code": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "title": "Feeder Code",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "substation": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Substation"
+        },
+        "active": {
+          "default": true,
+          "title": "Active",
+          "type": "boolean"
+        },
+        "transformer_count": {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "title": "Transformer Count",
+          "type": "integer"
+        },
+        "meter_count": {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "title": "Meter Count",
+          "type": "integer"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Created At"
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Updated At"
+        },
+        "metadata_unavailable_reason": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Metadata Unavailable Reason"
+        }
+      },
+      "required": [
+        "feeder_id",
+        "feeder_code",
+        "transformer_count",
+        "meter_count"
+      ],
+      "title": "FeederContract",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/FeederContract"
+      },
+      "maxItems": 1000,
+      "title": "Items",
+      "type": "array"
+    },
+    "page": {
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Page",
+      "type": "integer"
+    },
+    "page_size": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Page Size",
+      "type": "integer"
+    },
+    "total": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    },
+    "pages": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Pages",
+      "type": "integer"
+    },
+    "request_id": {
+      "format": "uuid",
+      "title": "Request Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "items",
+    "page",
+    "page_size",
+    "total",
+    "pages",
+    "request_id"
+  ],
+  "title": "PaginatedResponse[FeederContract]",
+  "type": "object"
+}

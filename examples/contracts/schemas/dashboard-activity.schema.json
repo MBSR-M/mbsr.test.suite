@@ -1,0 +1,94 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "activity_id": {
+      "description": "Stable source-qualified identifier, e.g. anomaly:42, audit:3 or UUID.",
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Activity Id",
+      "type": "string"
+    },
+    "timestamp": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Timestamp",
+      "type": "string"
+    },
+    "activity_type": {
+      "enum": [
+        "READING",
+        "QUALITY",
+        "ANOMALY",
+        "COMMUNICATION",
+        "INVESTIGATION",
+        "SYSTEM"
+      ],
+      "title": "Activity Type",
+      "type": "string"
+    },
+    "entity_type": {
+      "anyOf": [
+        {
+          "maxLength": 32,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Entity Type"
+    },
+    "entity_id": {
+      "anyOf": [
+        {
+          "description": "Existing internal numeric database identifier, distinct from operational code.",
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Entity Id"
+    },
+    "title": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "description": {
+      "maxLength": 2000,
+      "title": "Description",
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "INFO",
+        "WARNING",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "required": [
+    "activity_id",
+    "timestamp",
+    "activity_type",
+    "entity_type",
+    "entity_id",
+    "title",
+    "description",
+    "severity"
+  ],
+  "title": "DashboardActivityContract",
+  "type": "object"
+}

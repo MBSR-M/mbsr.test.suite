@@ -1,0 +1,154 @@
+{
+  "uid": "opengrid-overview",
+  "title": "Executive Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "timezone": "utc",
+  "refresh": "30s",
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Assets",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT kind, COUNT(*) count FROM v_assets GROUP BY kind",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "title": "Eligible energy accounting",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT SUM(input_kwh) input_kwh, SUM(downstream_kwh) downstream_kwh, SUM(accounting_difference_kwh) difference_kwh, 100*SUM(accounting_difference_kwh)/NULLIF(SUM(input_kwh),0) difference_percent FROM v_balance WHERE $__timeFilter(start) AND status='COMPLETE'",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "title": "Open investigations",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT status, COUNT(*) cases FROM v_cases GROUP BY status",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "title": "Coverage",
+      "type": "table",
+      "datasource": {
+        "type": "mysql",
+        "uid": "opengrid-mysql"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 27,
+        "w": 24,
+        "h": 9
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "rawSql": "SELECT status, COUNT(*) intervals FROM v_balance WHERE $__timeFilter(start) GROUP BY status",
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      }
+    }
+  ],
+  "templating": {
+    "list": [
+      {
+        "name": "transformer",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='TRANSFORMER' ORDER BY code",
+        "refresh": 1
+      },
+      {
+        "name": "meter",
+        "type": "query",
+        "datasource": {
+          "type": "mysql",
+          "uid": "opengrid-mysql"
+        },
+        "query": "SELECT code FROM v_assets WHERE kind='METER' ORDER BY code",
+        "refresh": 1
+      }
+    ]
+  },
+  "links": [
+    {
+      "type": "dashboards",
+      "title": "OpenGrid dashboards",
+      "tags": [
+        "opengrid"
+      ]
+    }
+  ],
+  "tags": [
+    "opengrid"
+  ]
+}

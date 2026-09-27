@@ -1,0 +1,162 @@
+{
+  "$defs": {
+    "EnergySource": {
+      "enum": [
+        "MEASURED",
+        "DERIVED",
+        "ESTIMATED",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergySource",
+      "type": "string"
+    },
+    "RegisterStatus": {
+      "enum": [
+        "NORMAL",
+        "RESET",
+        "ROLLOVER",
+        "REPLACEMENT",
+        "INVALID"
+      ],
+      "title": "RegisterStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "interval_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval Start",
+      "type": "string"
+    },
+    "interval_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval End",
+      "type": "string"
+    },
+    "interval_minutes": {
+      "const": 15,
+      "default": 15,
+      "title": "Interval Minutes",
+      "type": "integer"
+    },
+    "meter_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Meter Id",
+      "type": "integer"
+    },
+    "import_energy_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Import Energy Kwh",
+      "type": "string"
+    },
+    "export_energy_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Export Energy Kwh",
+      "type": "string"
+    },
+    "import_delta_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Import Delta Kwh",
+      "type": "string"
+    },
+    "export_delta_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Export Delta Kwh",
+      "type": "string"
+    },
+    "multiplier": {
+      "gt": 0,
+      "title": "Multiplier",
+      "type": "string"
+    },
+    "register_status": {
+      "$ref": "#/$defs/RegisterStatus"
+    },
+    "quality": {
+      "enum": [
+        "VALID",
+        "ESTIMATED"
+      ],
+      "title": "Quality",
+      "type": "string"
+    },
+    "calculation_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "DERIVED"
+    },
+    "calculation_policy": {
+      "anyOf": [
+        {
+          "maxLength": 255,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Calculation Policy"
+    },
+    "avg_import_power_kw": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Avg Import Power Kw"
+    },
+    "avg_export_power_kw": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Avg Export Power Kw"
+    }
+  },
+  "required": [
+    "interval_start",
+    "interval_end",
+    "meter_id",
+    "import_energy_kwh",
+    "export_energy_kwh",
+    "import_delta_kwh",
+    "export_delta_kwh",
+    "multiplier",
+    "register_status",
+    "quality"
+  ],
+  "title": "MeterIntervalEnergyContract",
+  "type": "object"
+}

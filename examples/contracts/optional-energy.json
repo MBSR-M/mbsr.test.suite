@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "energy_kwh": null,
+  "source": "UNAVAILABLE",
+  "unavailable_reason": "No validated upstream measurement."
+}

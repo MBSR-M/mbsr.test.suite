@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "event_id": "724b3e6f-8db5-45ce-bbb0-20eb0e30f166",
+  "entity_id": 234,
+  "entity_type": "METER",
+  "event_time": "2026-09-27T10:00:00Z",
+  "event_type": "POWER_FAILURE",
+  "source": "AMI",
+  "evidence": {
+    "cause": "source reported"
+  }
+}

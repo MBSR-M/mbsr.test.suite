@@ -1,0 +1,129 @@
+{
+  "$defs": {
+    "HealthStatus": {
+      "enum": [
+        "HEALTHY",
+        "WATCH",
+        "HIGH",
+        "CRITICAL",
+        "UNKNOWN"
+      ],
+      "title": "HealthStatus",
+      "type": "string"
+    },
+    "MeterTopologyContract": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "description": "Version of this canonical schema; unsupported versions fail closed.",
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "meter_id": {
+          "description": "Existing internal numeric database identifier, distinct from operational code.",
+          "minimum": 1,
+          "title": "Meter Id",
+          "type": "integer"
+        },
+        "meter_no": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "title": "Meter No",
+          "type": "string"
+        },
+        "consumer_type": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Consumer Type"
+        },
+        "status": {
+          "$ref": "#/$defs/HealthStatus"
+        }
+      },
+      "required": [
+        "meter_id",
+        "meter_no",
+        "status"
+      ],
+      "title": "MeterTopologyContract",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "transformer_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Transformer Id",
+      "type": "integer"
+    },
+    "transformer_code": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "title": "Transformer Code",
+      "type": "string"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Name"
+    },
+    "meter_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Meter Count",
+      "type": "integer"
+    },
+    "status": {
+      "$ref": "#/$defs/HealthStatus"
+    },
+    "meters": {
+      "items": {
+        "$ref": "#/$defs/MeterTopologyContract"
+      },
+      "maxItems": 1000,
+      "title": "Meters",
+      "type": "array"
+    },
+    "meters_truncated": {
+      "default": false,
+      "title": "Meters Truncated",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "transformer_id",
+    "transformer_code",
+    "name",
+    "meter_count",
+    "status",
+    "meters"
+  ],
+  "title": "TransformerTopologyContract",
+  "type": "object"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "event_id": "724b3e6f-8db5-45ce-bbb0-20eb0e30f166",
+  "measurement_kind": "CUMULATIVE_REGISTER",
+  "reading_time": "2026-09-27T10:15:00Z",
+  "received_at": "2026-09-27T10:15:12Z",
+  "processed_at": null,
+  "energy_import_total_kwh": "12543.842000",
+  "energy_export_total_kwh": "0.000000",
+  "import_power_kw": null,
+  "export_power_kw": null,
+  "voltage_avg_v": "230.120",
+  "current_avg_a": null,
+  "frequency_avg_hz": null,
+  "source": "AMI",
+  "source_metadata": {},
+  "energy_basis": "REGISTER_SECONDARY",
+  "register_epoch": "installation-1",
+  "revision": 1,
+  "meter_id": 234,
+  "meter_no": "M100234"
+}

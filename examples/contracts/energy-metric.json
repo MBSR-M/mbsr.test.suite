@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "value_kwh": "81.3",
+  "availability": "PARTIAL",
+  "source": "DERIVED",
+  "expected_intervals": 1000,
+  "valid_intervals": 982,
+  "unavailable_reason": null
+}

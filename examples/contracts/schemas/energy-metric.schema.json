@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "EnergyAvailability": {
+      "enum": [
+        "AVAILABLE",
+        "PARTIAL",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergyAvailability",
+      "type": "string"
+    },
+    "EnergySource": {
+      "enum": [
+        "MEASURED",
+        "DERIVED",
+        "ESTIMATED",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergySource",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "value_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Value Kwh"
+    },
+    "availability": {
+      "$ref": "#/$defs/EnergyAvailability"
+    },
+    "source": {
+      "$ref": "#/$defs/EnergySource"
+    },
+    "expected_intervals": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Expected Intervals",
+      "type": "integer"
+    },
+    "valid_intervals": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Valid Intervals",
+      "type": "integer"
+    },
+    "unavailable_reason": {
+      "anyOf": [
+        {
+          "maxLength": 255,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unavailable Reason"
+    }
+  },
+  "required": [
+    "value_kwh",
+    "availability",
+    "source",
+    "expected_intervals",
+    "valid_intervals"
+  ],
+  "title": "EnergyMetricContract",
+  "type": "object"
+}

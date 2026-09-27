@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "interval_start": "2026-09-27T10:00:00Z",
+  "interval_end": "2026-09-27T10:15:00Z",
+  "interval_minutes": 15,
+  "meter_id": 234,
+  "import_energy_kwh": "6.320000",
+  "export_energy_kwh": "0",
+  "import_delta_kwh": "0.632000",
+  "export_delta_kwh": "0",
+  "multiplier": "10",
+  "register_status": "NORMAL",
+  "quality": "VALID",
+  "calculation_source": "DERIVED",
+  "calculation_policy": null,
+  "avg_import_power_kw": "25.28",
+  "avg_export_power_kw": null
+}

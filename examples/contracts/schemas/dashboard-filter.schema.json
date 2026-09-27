@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "Severity": {
+      "enum": [
+        "NORMAL",
+        "WATCH",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "from_time": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "From Time",
+      "type": "string"
+    },
+    "to_time": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "To Time",
+      "type": "string"
+    },
+    "feeder_ids": {
+      "items": {
+        "description": "Existing internal numeric database identifier, distinct from operational code.",
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 100,
+      "title": "Feeder Ids",
+      "type": "array"
+    },
+    "transformer_ids": {
+      "items": {
+        "description": "Existing internal numeric database identifier, distinct from operational code.",
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 100,
+      "title": "Transformer Ids",
+      "type": "array"
+    },
+    "severity": {
+      "items": {
+        "$ref": "#/$defs/Severity"
+      },
+      "maxItems": 4,
+      "title": "Severity",
+      "type": "array"
+    },
+    "granularity": {
+      "default": "15m",
+      "enum": [
+        "15m",
+        "1h",
+        "1d"
+      ],
+      "title": "Granularity",
+      "type": "string"
+    }
+  },
+  "required": [
+    "from_time",
+    "to_time"
+  ],
+  "title": "DashboardFilterContract",
+  "type": "object"
+}

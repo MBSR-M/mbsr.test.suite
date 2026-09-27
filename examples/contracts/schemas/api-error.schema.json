@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "ErrorCode": {
+      "enum": [
+        "VALIDATION_ERROR",
+        "INVALID_REQUEST",
+        "UNSUPPORTED_SCHEMA_VERSION",
+        "NOT_FOUND",
+        "FEEDER_NOT_FOUND",
+        "TRANSFORMER_NOT_FOUND",
+        "METER_NOT_FOUND",
+        "INVESTIGATION_NOT_FOUND",
+        "DUPLICATE_RECORD",
+        "READING_INVALID",
+        "READING_OUT_OF_ORDER",
+        "REGISTER_RESET",
+        "REGISTER_ROLLOVER",
+        "DATABASE_ERROR",
+        "KAFKA_ERROR",
+        "RABBITMQ_ERROR",
+        "AUTHENTICATION_REQUIRED",
+        "AUTHORIZATION_FAILED",
+        "VERSION_CONFLICT",
+        "INTERNAL_ERROR"
+      ],
+      "title": "ErrorCode",
+      "type": "string"
+    },
+    "ErrorDetailContract": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "description": "Version of this canonical schema; unsupported versions fail closed.",
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "code": {
+          "$ref": "#/$defs/ErrorCode"
+        },
+        "message": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Safe validation/context information; never credentials, stack traces or SQL.",
+          "title": "Details",
+          "type": "object"
+        },
+        "request_id": {
+          "format": "uuid",
+          "title": "Request Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "request_id"
+      ],
+      "title": "ErrorDetailContract",
+      "type": "object"
+    },
+    "JsonValue": {}
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "error": {
+      "$ref": "#/$defs/ErrorDetailContract"
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "title": "ErrorResponse",
+  "type": "object"
+}

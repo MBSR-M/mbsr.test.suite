@@ -1,0 +1,265 @@
+{
+  "$defs": {
+    "EnergyAvailability": {
+      "enum": [
+        "AVAILABLE",
+        "PARTIAL",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergyAvailability",
+      "type": "string"
+    },
+    "EnergySource": {
+      "enum": [
+        "MEASURED",
+        "DERIVED",
+        "ESTIMATED",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergySource",
+      "type": "string"
+    },
+    "HealthStatus": {
+      "enum": [
+        "HEALTHY",
+        "WATCH",
+        "HIGH",
+        "CRITICAL",
+        "UNKNOWN"
+      ],
+      "title": "HealthStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "period_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Period Start",
+      "type": "string"
+    },
+    "period_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Period End",
+      "type": "string"
+    },
+    "input_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Input Energy Kwh"
+    },
+    "downstream_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Downstream Energy Kwh"
+    },
+    "accounting_difference_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Kwh"
+    },
+    "accounting_difference_percent": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Percent"
+    },
+    "input_energy_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "UNAVAILABLE"
+    },
+    "downstream_energy_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "UNAVAILABLE"
+    },
+    "accounting_difference_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "UNAVAILABLE"
+    },
+    "energy_availability": {
+      "$ref": "#/$defs/EnergyAvailability",
+      "default": "UNAVAILABLE"
+    },
+    "energy_basis": {
+      "const": "NET_IMPORT",
+      "default": "NET_IMPORT",
+      "title": "Energy Basis",
+      "type": "string"
+    },
+    "availability_reason": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Availability Reason"
+    },
+    "feeder_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Feeder Id",
+      "type": "integer"
+    },
+    "feeder_code": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "title": "Feeder Code",
+      "type": "string"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Name"
+    },
+    "substation": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Substation"
+    },
+    "transformer_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Transformer Count",
+      "type": "integer"
+    },
+    "meter_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Meter Count",
+      "type": "integer"
+    },
+    "data_completeness_percent": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Completeness Percent"
+    },
+    "anomaly_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Anomaly Count",
+      "type": "integer"
+    },
+    "high_anomaly_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "High Anomaly Count",
+      "type": "integer"
+    },
+    "critical_anomaly_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Critical Anomaly Count",
+      "type": "integer"
+    },
+    "open_investigation_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Open Investigation Count",
+      "type": "integer"
+    },
+    "confidence_score": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Confidence Score"
+    },
+    "status": {
+      "$ref": "#/$defs/HealthStatus"
+    }
+  },
+  "required": [
+    "period_start",
+    "period_end",
+    "input_energy_kwh",
+    "downstream_energy_kwh",
+    "accounting_difference_kwh",
+    "accounting_difference_percent",
+    "feeder_id",
+    "feeder_code",
+    "name",
+    "substation",
+    "transformer_count",
+    "meter_count",
+    "data_completeness_percent",
+    "anomaly_count",
+    "high_anomaly_count",
+    "critical_anomaly_count",
+    "open_investigation_count",
+    "confidence_score",
+    "status"
+  ],
+  "title": "FeederSummaryContract",
+  "type": "object"
+}

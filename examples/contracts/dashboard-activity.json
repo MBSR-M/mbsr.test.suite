@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "activity_id": "anomaly:82",
+  "timestamp": "2026-09-27T10:00:00Z",
+  "activity_type": "ANOMALY",
+  "entity_type": "TRANSFORMER",
+  "entity_id": 47,
+  "title": "Persistent transformer imbalance",
+  "description": "18.7% vs 7.2% baseline.",
+  "severity": "HIGH"
+}

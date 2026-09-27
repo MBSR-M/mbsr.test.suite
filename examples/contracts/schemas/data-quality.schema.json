@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "EntityType": {
+      "enum": [
+        "METER",
+        "TRANSFORMER"
+      ],
+      "title": "EntityType",
+      "type": "string"
+    },
+    "ReadingQuality": {
+      "enum": [
+        "VALID",
+        "MISSING",
+        "DUPLICATE",
+        "LATE",
+        "OUT_OF_ORDER",
+        "INVALID",
+        "REGISTER_RESET",
+        "REGISTER_ROLLOVER",
+        "METER_REPLACED",
+        "ESTIMATED"
+      ],
+      "title": "ReadingQuality",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "interval_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval Start",
+      "type": "string"
+    },
+    "interval_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval End",
+      "type": "string"
+    },
+    "interval_minutes": {
+      "const": 15,
+      "default": 15,
+      "title": "Interval Minutes",
+      "type": "integer"
+    },
+    "entity_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Entity Id",
+      "type": "integer"
+    },
+    "entity_type": {
+      "$ref": "#/$defs/EntityType"
+    },
+    "expected": {
+      "title": "Expected",
+      "type": "boolean"
+    },
+    "received": {
+      "title": "Received",
+      "type": "boolean"
+    },
+    "quality": {
+      "$ref": "#/$defs/ReadingQuality"
+    },
+    "delay_seconds": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Delay Seconds"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "interval_start",
+    "interval_end",
+    "entity_id",
+    "entity_type",
+    "expected",
+    "received",
+    "quality",
+    "delay_seconds"
+  ],
+  "title": "DataQualityContract",
+  "type": "object"
+}

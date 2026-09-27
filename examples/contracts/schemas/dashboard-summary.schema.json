@@ -1,0 +1,253 @@
+{
+  "$defs": {
+    "EnergyAvailability": {
+      "enum": [
+        "AVAILABLE",
+        "PARTIAL",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergyAvailability",
+      "type": "string"
+    },
+    "EnergySource": {
+      "enum": [
+        "MEASURED",
+        "DERIVED",
+        "ESTIMATED",
+        "UNAVAILABLE"
+      ],
+      "title": "EnergySource",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "period_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Period Start",
+      "type": "string"
+    },
+    "period_end": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Period End",
+      "type": "string"
+    },
+    "input_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Input Energy Kwh"
+    },
+    "downstream_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Downstream Energy Kwh"
+    },
+    "accounting_difference_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Kwh"
+    },
+    "accounting_difference_percent": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Percent"
+    },
+    "input_energy_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "UNAVAILABLE"
+    },
+    "downstream_energy_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "UNAVAILABLE"
+    },
+    "accounting_difference_source": {
+      "$ref": "#/$defs/EnergySource",
+      "default": "UNAVAILABLE"
+    },
+    "energy_availability": {
+      "$ref": "#/$defs/EnergyAvailability",
+      "default": "UNAVAILABLE"
+    },
+    "energy_basis": {
+      "const": "NET_IMPORT",
+      "default": "NET_IMPORT",
+      "title": "Energy Basis",
+      "type": "string"
+    },
+    "availability_reason": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Availability Reason"
+    },
+    "transformer_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Transformer Count",
+      "type": "integer"
+    },
+    "meter_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Meter Count",
+      "type": "integer"
+    },
+    "feeder_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Feeder Count",
+      "type": "integer"
+    },
+    "data_completeness_percent": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Completeness Percent"
+    },
+    "open_investigation_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Open Investigation Count",
+      "type": "integer"
+    },
+    "critical_anomaly_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Critical Anomaly Count",
+      "type": "integer"
+    },
+    "high_anomaly_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "High Anomaly Count",
+      "type": "integer"
+    },
+    "watch_anomaly_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Watch Anomaly Count",
+      "type": "integer"
+    },
+    "healthy_transformer_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Healthy Transformer Count",
+      "type": "integer"
+    },
+    "watch_transformer_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Watch Transformer Count",
+      "type": "integer"
+    },
+    "high_transformer_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "High Transformer Count",
+      "type": "integer"
+    },
+    "critical_transformer_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Critical Transformer Count",
+      "type": "integer"
+    },
+    "unknown_transformer_count": {
+      "default": 0,
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Unknown Transformer Count",
+      "type": "integer"
+    },
+    "confidence_score": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Confidence Score"
+    }
+  },
+  "required": [
+    "period_start",
+    "period_end",
+    "input_energy_kwh",
+    "downstream_energy_kwh",
+    "accounting_difference_kwh",
+    "accounting_difference_percent",
+    "transformer_count",
+    "meter_count",
+    "feeder_count",
+    "data_completeness_percent",
+    "open_investigation_count",
+    "critical_anomaly_count",
+    "high_anomaly_count",
+    "watch_anomaly_count",
+    "healthy_transformer_count",
+    "watch_transformer_count",
+    "high_transformer_count",
+    "critical_transformer_count",
+    "confidence_score"
+  ],
+  "title": "DashboardSummaryContract",
+  "type": "object"
+}

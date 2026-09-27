@@ -1,0 +1,195 @@
+{
+  "$defs": {
+    "Severity": {
+      "enum": [
+        "NORMAL",
+        "WATCH",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "transformer_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Transformer Id",
+      "type": "integer"
+    },
+    "transformer_code": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "title": "Transformer Code",
+      "type": "string"
+    },
+    "feeder_id": {
+      "anyOf": [
+        {
+          "description": "Existing internal numeric database identifier, distinct from operational code.",
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Feeder Id"
+    },
+    "feeder_code": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Feeder Code"
+    },
+    "current_imbalance_percent": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Current Imbalance Percent"
+    },
+    "baseline_imbalance_percent": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Baseline Imbalance Percent"
+    },
+    "deviation_percentage_points": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Deviation Percentage Points"
+    },
+    "accounting_difference_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Accounting Difference Kwh"
+    },
+    "persistence_intervals": {
+      "anyOf": [
+        {
+          "description": "Non-negative count for the stated population and period.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Persistence Intervals"
+    },
+    "data_completeness_percent": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Completeness Percent"
+    },
+    "confidence_score": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Confidence Score"
+    },
+    "anomaly_score": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Anomaly Score"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "open_investigation_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Open Investigation Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "transformer_id",
+    "transformer_code",
+    "feeder_id",
+    "feeder_code",
+    "current_imbalance_percent",
+    "baseline_imbalance_percent",
+    "deviation_percentage_points",
+    "accounting_difference_kwh",
+    "persistence_intervals",
+    "data_completeness_percent",
+    "confidence_score",
+    "anomaly_score",
+    "severity",
+    "open_investigation_count"
+  ],
+  "title": "DashboardTransformerItemContract",
+  "type": "object"
+}

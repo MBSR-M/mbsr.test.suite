@@ -1,0 +1,116 @@
+{% macro icon(name, class_name='') -%}
+<svg class="icon {{ class_name }}" aria-hidden="true" focusable="false"><use href="#icon-{{ name }}"></use></svg>
+{%- endmacro %}
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="csrf-token" content="{{ csrf_token|default('') }}">
+  <meta name="htmx-config" content='{"allowEval":false,"allowScriptTags":false,"includeIndicatorStyles":false,"selfRequestsOnly":true,"historyCacheSize":0}'>
+  <title>{% block title %}{{ page_title|default('Overview') }}{% endblock %} · OpenGrid Loss</title>
+  <script src="/static/app.js"></script>
+  <link rel="stylesheet" href="/static/app.css">
+  <script defer src="/static/vendor/htmx-2.0.11.min.js"></script>
+  <script defer src="/static/vendor/chart-4.5.1.umd.min.js"></script>
+  {% block head %}{% endblock %}
+</head>
+<body class="app-body">
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="icon-transformer" viewBox="0 0 24 24"><path d="M8 3v3m8-3v3M6 6h12v13H6zM3 10h3m12 0h3M3 15h3m12 0h3M9 19v2m6-2v2m-2-12-3 5h4l-3 4"/></symbol>
+    <symbol id="icon-meter" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8v6H8zM8 17h2m4 0h2M12 10l2-2"/></symbol>
+    <symbol id="icon-case" viewBox="0 0 24 24"><path d="M9 6V3h6v3M3 6h18v15H3zM3 11h18m-11 0v3h4v-3"/></symbol>
+    <symbol id="icon-quality" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></symbol>
+    <symbol id="icon-events" viewBox="0 0 24 24"><path d="M4 4v16h17M7 13l4-5 4 7 5-9"/></symbol>
+    <symbol id="icon-network" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5H5v5m7-5h7v5"/></symbol>
+    <symbol id="icon-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 8 6 4-6 4z"/></symbol>
+    <symbol id="icon-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16M8 3v6m8 0v6m-6 0v6"/></symbol>
+    <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 3h7v7m0-7L11 13M10 5H4v15h15v-6"/></symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="icon-bell" viewBox="0 0 24 24"><path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5zm5 3h4M12 2v2"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+  </svg>
+
+  <aside class="sidebar" id="app-sidebar" aria-label="Main navigation">
+    <a class="brand" href="/dashboard" aria-label="OpenGrid Loss overview">
+      <span class="brand-mark">{{ icon('grid') }}</span>
+      <span class="brand-text">OpenGrid <strong>Loss</strong><small>ENERGY OPERATIONS</small></span>
+    </a>
+    <div class="workspace-label"><span class="workspace-dot"></span><span class="nav-label">Operations workspace</span></div>
+    <nav class="sidebar-nav" aria-label="Workspace">
+      <p class="nav-section-label">WORKSPACE</p>
+      {% for key, label, route, glyph in [
+        ('dashboard','Overview','/dashboard','grid'),
+        ('feeders','Feeders','/feeders','network'),
+        ('transformers','Transformers','/transformers','transformer'),
+        ('meters','Meters','/meters','meter'),
+        ('investigations','Investigations','/investigations','case'),
+        ('data-quality','Data quality','/data-quality','quality'),
+        ('events','Events','/events','events'),
+        ('network','Network','/network','network')
+      ] %}
+      <a class="nav-link{% if active_page|default('') == key %} active{% endif %}" href="{{ route }}" title="{{ label }}"{% if active_page|default('') == key %} aria-current="page"{% endif %}>{{ icon(glyph) }}<span class="nav-label">{{ label }}</span></a>
+      {% endfor %}
+      <p class="nav-section-label">PLATFORM</p>
+      {% for key, label, route, glyph in [
+        ('simulator','Simulator','/simulator','play'),
+        ('system','System health','/system','pulse'),
+        ('settings','Settings','/settings','settings')
+      ] %}
+      <a class="nav-link{% if active_page|default('') == key %} active{% endif %}" href="{{ route }}" title="{{ label }}"{% if active_page|default('') == key %} aria-current="page"{% endif %}>{{ icon(glyph) }}<span class="nav-label">{{ label }}</span></a>
+      {% endfor %}
+      <a class="nav-link" href="{{ grafana_url|default('http://localhost:3000') }}" target="_blank" rel="noopener noreferrer" title="Grafana (opens in a new tab)">{{ icon('events') }}<span class="nav-label">Grafana</span>{{ icon('external','nav-external') }}</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="sidebar-bottom-mark">OG</span><span class="nav-label">Measured. Accounted. Explained.<small>OpenGrid Loss · v{{ app_version|default('0.2.0') }}</small></span></div>
+  </aside>
+  <button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>
+
+  <div class="app-workspace">
+    <header class="app-header">
+      <div class="header-start">
+        <button class="icon-button sidebar-toggle" type="button" data-sidebar-toggle aria-label="Toggle navigation" aria-controls="app-sidebar" aria-expanded="true">{{ icon('menu') }}</button>
+        <div class="breadcrumb"><span>Workspace</span><span aria-hidden="true">/</span><strong>{{ page_title|default('Overview') }}</strong></div>
+      </div>
+      <div class="header-tools">
+        <div class="global-search" data-search-container>
+          {{ icon('search') }}
+          <label class="visually-hidden" for="global-search">Search transformers, meters, and cases</label>
+          <input id="global-search" type="search" name="q" placeholder="Search transformer, meter, case…" autocomplete="off" maxlength="100" aria-controls="global-search-results" aria-expanded="false" hx-get="/ui/search" hx-trigger="input changed delay:300ms, search" hx-target="#global-search-results" hx-indicator="#search-loading" hx-sync="this:replace">
+          <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+          <span class="loading-spinner htmx-indicator" id="search-loading" aria-label="Searching"></span>
+          <div class="search-results popover" id="global-search-results" aria-label="Search results" aria-live="polite" hidden><p class="popover-hint">Search by transformer, meter, case, or anomaly identifier.</p></div>
+        </div>
+        <label class="theme-control" title="Color theme">{{ icon('sun') }}<span class="visually-hidden">Color theme</span><select data-theme-select aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+        <details class="header-menu alert-menu" data-popover>
+          <summary class="icon-button" aria-label="Open alert center" title="Alert center">{{ icon('bell') }}{% if notification_count|default(0) %}<span class="notification-dot"></span>{% endif %}</summary>
+          <div class="popover alert-popover"><div class="popover-header"><strong>Alert center</strong><span class="live-indicator">LIVE</span></div><div id="alert-results" hx-get="/ui/alerts" hx-trigger="load, every 30s" hx-swap="innerHTML"><p class="popover-hint">Loading current alerts…</p></div></div>
+        </details>
+        {% if user|default(none) %}
+        <details class="header-menu user-menu" data-popover>
+          <summary class="user-trigger"><span class="avatar">{{ (user.display_name or user.username)[:2]|upper }}</span><span class="user-label"><strong>{{ user.display_name or user.username }}</strong><small>{{ user.role|lower|capitalize }}</small></span>{{ icon('chevron') }}</summary>
+          <div class="popover user-popover"><div class="user-menu-info"><strong>{{ user.display_name or user.username }}</strong><span>{{ user.role|lower|capitalize }} access</span></div><a href="/settings">Workspace settings</a><form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token|default('') }}"><button type="submit">Sign out</button></form></div>
+        </details>
+        {% else %}<a class="button button-sm button-secondary" href="/login">Sign in</a>{% endif %}
+      </div>
+    </header>
+    <div class="request-progress" id="request-progress" aria-hidden="true"></div>
+    <main class="main-content" id="main-content" tabindex="-1">
+      {% if flash_message|default('') %}<div class="notice notice-success" role="status">{{ flash_message }}</div>{% endif %}
+      {% block content %}{% endblock %}
+    </main>
+    <footer class="app-footer"><a href="/system">{{ icon('pulse') }} System health</a><span>All timestamps UTC <span class="footer-divider">·</span> OpenGrid Loss v{{ app_version|default('0.2.0') }}</span></footer>
+  </div>
+  <div class="toast" id="app-toast" role="status" aria-live="polite" hidden></div>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

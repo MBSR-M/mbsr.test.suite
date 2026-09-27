@@ -1,0 +1,19 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.lock && pip install -e . --no-deps
+      - run: ruff check . && ruff format --check . && mypy
+      - run: pytest -q -m 'not integration and not e2e'
+      - run: sh scripts/bootstrap.sh
+      - run: docker compose run --rm --no-deps test pytest -q
+      - if: always()
+        run: docker compose logs --tail=100
+      - if: always()
+        run: docker compose down

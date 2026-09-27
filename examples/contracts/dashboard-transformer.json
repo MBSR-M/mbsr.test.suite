@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "transformer_id": 47,
+  "transformer_code": "DT-1047",
+  "feeder_id": 12,
+  "feeder_code": "FDR-12",
+  "current_imbalance_percent": "18.7",
+  "baseline_imbalance_percent": "7.2",
+  "deviation_percentage_points": "11.5",
+  "accounting_difference_kwh": "18.7",
+  "persistence_intervals": 4,
+  "data_completeness_percent": "100",
+  "confidence_score": "100",
+  "anomaly_score": "72.5",
+  "severity": "HIGH",
+  "open_investigation_count": 1
+}

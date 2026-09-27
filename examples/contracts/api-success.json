@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "data": {
+    "schema_version": 1,
+    "generated_at": "2026-09-27T10:15:00Z",
+    "filters": {
+      "schema_version": 1,
+      "from_time": "2026-09-27T10:00:00Z",
+      "to_time": "2026-09-27T10:15:00Z",
+      "feeder_ids": [],
+      "transformer_ids": [],
+      "severity": [],
+      "granularity": "15m"
+    },
+    "summary": {
+      "schema_version": 1,
+      "period_start": "2026-09-27T10:00:00Z",
+      "period_end": "2026-09-27T10:15:00Z",
+      "input_energy_kwh": "100",
+      "downstream_energy_kwh": "81.3",
+      "accounting_difference_kwh": "18.7",
+      "accounting_difference_percent": "18.7",
+      "input_energy_source": "DERIVED",
+      "downstream_energy_source": "DERIVED",
+      "accounting_difference_source": "DERIVED",
+      "energy_availability": "AVAILABLE",
+      "energy_basis": "NET_IMPORT",
+      "availability_reason": null,
+      "transformer_count": 1,
+      "meter_count": 5,
+      "feeder_count": 1,
+      "data_completeness_percent": "100",
+      "open_investigation_count": 1,
+      "critical_anomaly_count": 0,
+      "high_anomaly_count": 1,
+      "watch_anomaly_count": 0,
+      "healthy_transformer_count": 0,
+      "watch_transformer_count": 0,
+      "high_transformer_count": 1,
+      "critical_transformer_count": 0,
+      "unknown_transformer_count": 0,
+      "confidence_score": "100"
+    },
+    "trend": {
+      "schema_version": 1,
+      "period_start": "2026-09-27T10:00:00Z",
+      "period_end": "2026-09-27T10:15:00Z",
+      "granularity": "15m",
+      "points": [
+        {
+          "schema_version": 1,
+          "input_energy_kwh": "100",
+          "downstream_energy_kwh": "81.3",
+          "accounting_difference_kwh": "18.7",
+          "accounting_difference_percent": "18.7",
+          "input_energy_source": "DERIVED",
+          "downstream_energy_source": "DERIVED",
+          "accounting_difference_source": "DERIVED",
+          "energy_availability": "AVAILABLE",
+          "energy_basis": "NET_IMPORT",
+          "availability_reason": null,
+          "timestamp": "2026-09-27T10:00:00Z",
+          "data_completeness_percent": "100",
+          "anomaly_count": 1
+        }
+      ]
+    },
+    "health": {
+      "schema_version": 1,
+      "healthy": 0,
+      "watch": 0,
+      "high": 1,
+      "critical": 0,
+      "unknown": 0
+    },
+    "top_transformers": [
+      {
+        "schema_version": 1,
+        "transformer_id": 47,
+        "transformer_code": "DT-1047",
+        "feeder_id": 12,
+        "feeder_code": "FDR-12",
+        "current_imbalance_percent": "18.7",
+        "baseline_imbalance_percent": "7.2",
+        "deviation_percentage_points": "11.5",
+        "accounting_difference_kwh": "18.7",
+        "persistence_intervals": 4,
+        "data_completeness_percent": "100",
+        "confidence_score": "100",
+        "anomaly_score": "72.5",
+        "severity": "HIGH",
+        "open_investigation_count": 1
+      }
+    ],
+    "top_meters": [
+      {
+        "schema_version": 1,
+        "meter_id": 234,
+        "meter_no": "M100234",
+        "transformer_id": 47,
+        "transformer_code": "DT-1047",
+        "anomaly_type": "CONSUMPTION_DROP",
+        "current_consumption_kwh": "0.31",
+        "baseline_consumption_kwh": "1",
+        "deviation_percent": "-69",
+        "data_completeness_percent": "100",
+        "anomaly_score": "70",
+        "severity": "HIGH",
+        "last_reading_time": "2026-09-27T10:15:00Z"
+      }
+    ],
+    "top_investigations": [
+      {
+        "schema_version": 1,
+        "investigation_id": 182,
+        "case_no": "CASE-2026-00182",
+        "entity_type": "TRANSFORMER",
+        "entity_id": 47,
+        "entity_display_name": "DT-1047",
+        "priority_score": "72.5",
+        "severity": "HIGH",
+        "estimated_unaccounted_kwh": "18.7",
+        "status": "INVESTIGATING",
+        "assigned_to": "investigator",
+        "opened_at": "2026-09-27T10:15:00Z"
+      }
+    ],
+    "data_quality": {
+      "schema_version": 1,
+      "period_start": "2026-09-27T10:00:00Z",
+      "period_end": "2026-09-27T10:15:00Z",
+      "completeness_percent": "100",
+      "expected_intervals": 5,
+      "received_intervals": 5,
+      "missing_intervals": 0,
+      "duplicate_intervals": null,
+      "late_intervals": 0,
+      "invalid_intervals": 0,
+      "affected_meter_count": 0,
+      "affected_transformer_count": 0,
+      "availability_reason": "Duplicate-retry counts are not persisted by the legacy ingestion endpoint."
+    },
+    "recent_activity": [
+      {
+        "schema_version": 1,
+        "activity_id": "anomaly:82",
+        "timestamp": "2026-09-27T10:00:00Z",
+        "activity_type": "ANOMALY",
+        "entity_type": "TRANSFORMER",
+        "entity_id": 47,
+        "title": "Persistent transformer imbalance",
+        "description": "18.7% vs 7.2% baseline.",
+        "severity": "HIGH"
+      }
+    ]
+  },
+  "request_id": "724b3e6f-8db5-45ce-bbb0-20eb0e30f166"
+}

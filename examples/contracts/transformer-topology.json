@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "transformer_id": 47,
+  "transformer_code": "DT-1047",
+  "name": "Transformer 1047",
+  "meter_count": 5,
+  "status": "HIGH",
+  "meters": [
+    {
+      "schema_version": 1,
+      "meter_id": 234,
+      "meter_no": "M100234",
+      "consumer_type": null,
+      "status": "HIGH"
+    }
+  ],
+  "meters_truncated": true
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "feeder": {
+    "schema_version": 1,
+    "feeder_id": 12,
+    "feeder_code": "FDR-12",
+    "name": "Industrial Feeder 12",
+    "substation": null,
+    "active": true,
+    "transformer_count": 1,
+    "meter_count": 5,
+    "created_at": null,
+    "updated_at": null,
+    "metadata_unavailable_reason": "Creation/update and substation metadata are not stored in legacy MVP."
+  },
+  "transformers": [
+    {
+      "schema_version": 1,
+      "transformer_id": 47,
+      "transformer_code": "DT-1047",
+      "name": "Transformer 1047",
+      "meter_count": 5,
+      "status": "HIGH",
+      "meters": [
+        {
+          "schema_version": 1,
+          "meter_id": 234,
+          "meter_no": "M100234",
+          "consumer_type": null,
+          "status": "HIGH"
+        }
+      ],
+      "meters_truncated": true
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total": 1,
+  "pages": 1
+}

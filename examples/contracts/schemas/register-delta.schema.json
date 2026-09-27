@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "RegisterStatus": {
+      "enum": [
+        "NORMAL",
+        "RESET",
+        "ROLLOVER",
+        "REPLACEMENT",
+        "INVALID"
+      ],
+      "title": "RegisterStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "previous_register_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Previous Register Kwh",
+      "type": "string"
+    },
+    "current_register_kwh": {
+      "decimal_places": 6,
+      "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+      "ge": 0,
+      "max_digits": 20,
+      "title": "Current Register Kwh",
+      "type": "string"
+    },
+    "raw_delta_kwh": {
+      "decimal_places": 6,
+      "description": "Signed analytical energy in kWh with up to six fractional digits; aggregate totals may exceed a single DECIMAL(20,6) source row.",
+      "title": "Raw Delta Kwh",
+      "type": "string"
+    },
+    "meter_multiplier": {
+      "gt": 0,
+      "title": "Meter Multiplier",
+      "type": "string"
+    },
+    "calculated_energy_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+          "ge": 0,
+          "max_digits": 20,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Calculated Energy Kwh"
+    },
+    "register_status": {
+      "$ref": "#/$defs/RegisterStatus"
+    },
+    "recovery_policy": {
+      "anyOf": [
+        {
+          "maxLength": 255,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Recovery Policy"
+    }
+  },
+  "required": [
+    "previous_register_kwh",
+    "current_register_kwh",
+    "raw_delta_kwh",
+    "meter_multiplier",
+    "calculated_energy_kwh",
+    "register_status"
+  ],
+  "title": "RegisterDeltaContract",
+  "type": "object"
+}

@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "AnomalyType": {
+      "enum": [
+        "TRANSFORMER_IMBALANCE",
+        "TRANSFORMER_DATA_QUALITY",
+        "TRANSFORMER_COMMUNICATION",
+        "CONSUMPTION_DROP",
+        "CONSUMPTION_SPIKE",
+        "FLATLINE",
+        "ZERO_CONSUMPTION",
+        "METER_DATA_QUALITY",
+        "METER_COMMUNICATION"
+      ],
+      "title": "AnomalyType",
+      "type": "string"
+    },
+    "Severity": {
+      "enum": [
+        "NORMAL",
+        "WATCH",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "meter_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Meter Id",
+      "type": "integer"
+    },
+    "meter_no": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "title": "Meter No",
+      "type": "string"
+    },
+    "transformer_id": {
+      "anyOf": [
+        {
+          "description": "Existing internal numeric database identifier, distinct from operational code.",
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Transformer Id"
+    },
+    "transformer_code": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Transformer Code"
+    },
+    "anomaly_type": {
+      "$ref": "#/$defs/AnomalyType"
+    },
+    "current_consumption_kwh": {
+      "anyOf": [
+        {
+          "decimal_places": 6,
+          "description": "Non-negative energy in kWh, DECIMAL(20,6).",
+          "ge": 0,
+          "max_digits": 20,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Current Consumption Kwh"
+    },
+    "baseline_consumption_kwh": {
+      "anyOf": [
+        {
+          "ge": 0,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Baseline Consumption Kwh"
+    },
+    "deviation_percent": {
+      "anyOf": [
+        {
+          "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Deviation Percent"
+    },
+    "data_completeness_percent": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Completeness Percent"
+    },
+    "anomaly_score": {
+      "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+      "ge": 0,
+      "le": 100,
+      "title": "Anomaly Score",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "last_reading_time": {
+      "anyOf": [
+        {
+          "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Last Reading Time"
+    }
+  },
+  "required": [
+    "meter_id",
+    "meter_no",
+    "transformer_id",
+    "transformer_code",
+    "anomaly_type",
+    "current_consumption_kwh",
+    "baseline_consumption_kwh",
+    "deviation_percent",
+    "data_completeness_percent",
+    "anomaly_score",
+    "severity",
+    "last_reading_time"
+  ],
+  "title": "DashboardMeterItemContract",
+  "type": "object"
+}

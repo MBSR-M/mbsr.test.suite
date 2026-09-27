@@ -1,0 +1,377 @@
+{
+  "$defs": {
+    "AnomalyEvidenceContract": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "description": "Version of this canonical schema; unsupported versions fail closed.",
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "current_imbalance_percent": {
+          "anyOf": [
+            {
+              "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Imbalance Percent"
+        },
+        "baseline_imbalance_percent": {
+          "anyOf": [
+            {
+              "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Baseline Imbalance Percent"
+        },
+        "deviation_percentage_points": {
+          "anyOf": [
+            {
+              "description": "Signed percentage; imbalance and deviations can be negative and are not bounded to [0,100].",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deviation Percentage Points"
+        },
+        "persistent_intervals": {
+          "anyOf": [
+            {
+              "description": "Non-negative count for the stated population and period.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Persistent Intervals"
+        },
+        "data_completeness_percent": {
+          "anyOf": [
+            {
+              "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+              "ge": 0,
+              "le": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data Completeness Percent"
+        },
+        "affected_meter_count": {
+          "anyOf": [
+            {
+              "description": "Non-negative count for the stated population and period.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Affected Meter Count"
+        },
+        "communication_failures": {
+          "anyOf": [
+            {
+              "description": "Non-negative count for the stated population and period.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Communication Failures"
+        },
+        "relevant_event_count": {
+          "anyOf": [
+            {
+              "description": "Non-negative count for the stated population and period.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Relevant Event Count"
+        },
+        "components": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScoreComponentsContract"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "details": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "description": "Original machine-readable engine evidence, retained without invention.",
+          "title": "Details",
+          "type": "object"
+        }
+      },
+      "title": "AnomalyEvidenceContract",
+      "type": "object"
+    },
+    "AnomalyType": {
+      "enum": [
+        "TRANSFORMER_IMBALANCE",
+        "TRANSFORMER_DATA_QUALITY",
+        "TRANSFORMER_COMMUNICATION",
+        "CONSUMPTION_DROP",
+        "CONSUMPTION_SPIKE",
+        "FLATLINE",
+        "ZERO_CONSUMPTION",
+        "METER_DATA_QUALITY",
+        "METER_COMMUNICATION"
+      ],
+      "title": "AnomalyType",
+      "type": "string"
+    },
+    "EntityType": {
+      "enum": [
+        "METER",
+        "TRANSFORMER"
+      ],
+      "title": "EntityType",
+      "type": "string"
+    },
+    "JsonValue": {},
+    "ScoreComponentsContract": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": 1,
+          "default": 1,
+          "description": "Version of this canonical schema; unsupported versions fail closed.",
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "loss_deviation": {
+          "anyOf": [
+            {
+              "ge": 0,
+              "le": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Loss Deviation"
+        },
+        "persistence": {
+          "anyOf": [
+            {
+              "ge": 0,
+              "le": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Persistence"
+        },
+        "data_completeness": {
+          "anyOf": [
+            {
+              "ge": 0,
+              "le": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Data Completeness"
+        },
+        "consumption_anomaly": {
+          "anyOf": [
+            {
+              "ge": 0,
+              "le": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Consumption Anomaly"
+        },
+        "event_correlation": {
+          "anyOf": [
+            {
+              "ge": 0,
+              "le": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event Correlation"
+        }
+      },
+      "title": "ScoreComponentsContract",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "NORMAL",
+        "WATCH",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Severity",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "description": "Version of this canonical schema; unsupported versions fail closed.",
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "anomaly_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Anomaly Id",
+      "type": "integer"
+    },
+    "entity_type": {
+      "$ref": "#/$defs/EntityType"
+    },
+    "entity_id": {
+      "description": "Existing internal numeric database identifier, distinct from operational code.",
+      "minimum": 1,
+      "title": "Entity Id",
+      "type": "integer"
+    },
+    "anomaly_type": {
+      "$ref": "#/$defs/AnomalyType"
+    },
+    "interval_start": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Interval Start",
+      "type": "string"
+    },
+    "detected_at": {
+      "anyOf": [
+        {
+          "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Null when legacy storage did not retain detection processing time.",
+      "title": "Detected At"
+    },
+    "first_seen": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "First Seen",
+      "type": "string"
+    },
+    "last_seen": {
+      "description": "UTC ISO-8601 timestamp with explicit offset; JSON normalizes to Z.",
+      "title": "Last Seen",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/Severity"
+    },
+    "anomaly_score": {
+      "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+      "ge": 0,
+      "le": 100,
+      "title": "Anomaly Score",
+      "type": "string"
+    },
+    "data_confidence": {
+      "anyOf": [
+        {
+          "description": "Percentage or evidence index in [0,100]; never a probability of wrongdoing.",
+          "ge": 0,
+          "le": 100,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Confidence"
+    },
+    "occurrence_count": {
+      "description": "Non-negative count for the stated population and period.",
+      "minimum": 0,
+      "title": "Occurrence Count",
+      "type": "integer"
+    },
+    "evidence": {
+      "$ref": "#/$defs/AnomalyEvidenceContract"
+    },
+    "status": {
+      "pattern": "^(OPEN|ACKNOWLEDGED|RESOLVED|DISMISSED|SUPERSEDED)$",
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "anomaly_id",
+    "entity_type",
+    "entity_id",
+    "anomaly_type",
+    "interval_start",
+    "first_seen",
+    "last_seen",
+    "severity",
+    "anomaly_score",
+    "data_confidence",
+    "occurrence_count",
+    "evidence",
+    "status"
+  ],
+  "title": "AnomalyContract",
+  "type": "object"
+}
