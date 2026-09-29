@@ -1,9 +1,9 @@
 from alembic import context
 from sqlalchemy import create_engine
 
+from opengrid import product_models  # noqa: F401 -- register additive product metadata
 from opengrid.config import settings
 from opengrid.db import Base
-from opengrid import product_models  # noqa: F401 -- register additive product metadata
 
 if context.is_offline_mode():
     context.configure(

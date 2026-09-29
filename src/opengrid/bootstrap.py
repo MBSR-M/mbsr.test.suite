@@ -3,9 +3,9 @@ import os
 import pymysql
 from sqlalchemy import text
 
+from opengrid.config import settings
 from opengrid.db import session_factory
 from opengrid.messaging import TOPICS, initialize_topics
-from opengrid.config import settings
 from opengrid.ui_auth import bootstrap_admin
 
 

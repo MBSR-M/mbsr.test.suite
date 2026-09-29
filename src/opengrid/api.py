@@ -19,6 +19,7 @@ from opengrid.contracts import (
     ReadingInput,
     ReprocessInput,
 )
+from opengrid.contracts.errors import ErrorCode
 from opengrid.db import (
     Anomaly,
     Asset,
@@ -40,8 +41,8 @@ from opengrid.db import (
 )
 from opengrid.messaging import relay_loop
 from opengrid.services import Conflict, accept_reading, emit, update_case
+from opengrid.ui import canonical_api_error, install_ui, ui_error
 from opengrid.worker import configure_logging
-from opengrid.ui import install_ui, ui_error
 
 
 @asynccontextmanager
@@ -100,6 +101,8 @@ def serialize(row):
 
 @app.exception_handler(Conflict)
 async def conflict_handler(request, error):
+    if request.url.path.startswith("/api/v2/"):
+        return canonical_api_error(request, 409, ErrorCode.VERSION_CONFLICT, str(error))
     if not request.url.path.startswith("/api/"):
         return ui_error(request, str(error), 409)
     return JSONResponse(status_code=409, content={"detail": str(error)})
@@ -107,6 +110,8 @@ async def conflict_handler(request, error):
 
 @app.exception_handler(ValueError)
 async def value_handler(request, error):
+    if request.url.path.startswith("/api/v2/"):
+        return canonical_api_error(request, 422, ErrorCode.INVALID_REQUEST, str(error))
     if not request.url.path.startswith("/api/"):
         return ui_error(request, str(error), 422)
     return JSONResponse(status_code=422, content={"detail": str(error)})
@@ -114,6 +119,10 @@ async def value_handler(request, error):
 
 @app.exception_handler(IntegrityError)
 async def integrity_handler(request, error):
+    if request.url.path.startswith("/api/v2/"):
+        return canonical_api_error(
+            request, 409, ErrorCode.DUPLICATE_RECORD, "Constraint conflict or missing referenced entity."
+        )
     return JSONResponse(
         status_code=409, content={"detail": "constraint conflict or missing referenced entity"}
     )

@@ -1,6 +1,6 @@
 # Validation performed
 
-Executed on 26 September 2026 using Docker Desktop's Linux engine on Windows, with Python 3.12 application containers and real MySQL, Kafka KRaft, RabbitMQ and Grafana services.
+Executed on 26 and 29 September 2026 using Docker Desktop's Linux engine on Windows, with Python 3.12 application containers and real MySQL, Kafka KRaft, RabbitMQ and Grafana services.
 
 ## Results
 
@@ -13,6 +13,8 @@ Executed on 26 September 2026 using Docker Desktop's Linux engine on Windows, wi
 - DT-1047 produced an investigation with approximately **18.6998% accounting difference**, **7.2000% baseline**, **6 of 6 qualifying persistence slots**, and **5 valid meters**. Small numerical differences from the configured 18.7/7.2 reflect six-decimal simulated register rounding.
 - At the captured demonstration checkpoint, the quarantine count was **0**.
 - `.env` was confirmed excluded by `.gitignore`.
+- The operator UI login and all primary server-rendered pages were exercised against the running stack with a real local administrator session. A quick scenario run created feeder, transformer and meter topology through the UI workflow.
+- The canonical v2 dashboard response was validated with API-key authentication, including `schema_version: 1`; the feeder v2 routes and their concrete OpenAPI schemas are covered by the contract suite.
 
 Tests cover register scaling/reset/rollover, invalid numbers, zero/reverse flow, incomplete population, baseline/persistence/scoring, input schema rejection, MySQL duplicate acceptance and late boundary recalculation, independent meter anomaly supersession, RabbitMQ confirm/manual ACK/redelivery, inbox/job-outbox rollback, Grafana queries, and the full streaming investigation workflow with duplicate ingestion and stale case-update rejection.
 

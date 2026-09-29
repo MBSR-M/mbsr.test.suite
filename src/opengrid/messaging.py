@@ -74,7 +74,7 @@ def relay_once(factory, owner, client):
         rows = s.scalars(
             select(Outbox)
             .where(Outbox.owner == owner, Outbox.sent.is_(False))
-            .order_by(Outbox.created_at)
+            .order_by(Outbox.created_at, Outbox.id)
             .limit(100)
             .with_for_update(skip_locked=True)
         ).all()

@@ -1,0 +1,141 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="ignoredPackages">
+        <list>
+          <option value="greenlet" />
+          <option value="numpy" />
+          <option value="pandas" />
+          <option value="python-dateutil" />
+          <option value="pytz" />
+          <option value="six" />
+          <option value="SQLAlchemy" />
+          <option value="typing_extensions" />
+          <option value="tzdata" />
+          <option value="aiohappyeyeballs" />
+          <option value="aiohttp" />
+          <option value="aiosignal" />
+          <option value="altair" />
+          <option value="aniso8601" />
+          <option value="async-timeout" />
+          <option value="attrs" />
+          <option value="auth0-python" />
+          <option value="backports.zoneinfo" />
+          <option value="bcrypt" />
+          <option value="blinker" />
+          <option value="cachetools" />
+          <option value="certifi" />
+          <option value="cffi" />
+          <option value="charset-normalizer" />
+          <option value="click" />
+          <option value="colorama" />
+          <option value="configparser" />
+          <option value="contourpy" />
+          <option value="coverage" />
+          <option value="cryptography" />
+          <option value="cycler" />
+          <option value="et-xmlfile" />
+          <option value="exceptiongroup" />
+          <option value="Flask" />
+          <option value="Flask-Cors" />
+          <option value="Flask-JWT-Extended" />
+          <option value="flask-restx" />
+          <option value="fonttools" />
+          <option value="frozenlist" />
+          <option value="gitdb" />
+          <option value="GitPython" />
+          <option value="gunicorn" />
+          <option value="idna" />
+          <option value="iniconfig" />
+          <option value="itsdangerous" />
+          <option value="joblib" />
+          <option value="jsonschema" />
+          <option value="jsonschema-specifications" />
+          <option value="kafka-python" />
+          <option value="kafka-python-ng" />
+          <option value="kiwisolver" />
+          <option value="markdown-it-py" />
+          <option value="MarkupSafe" />
+          <option value="matplotlib" />
+          <option value="mdurl" />
+          <option value="multidict" />
+          <option value="mysql-connector-python" />
+          <option value="narwhals" />
+          <option value="openpyxl" />
+          <option value="packaging" />
+          <option value="paramiko" />
+          <option value="pathlib" />
+          <option value="pillow" />
+          <option value="plotly" />
+          <option value="pluggy" />
+          <option value="protobuf" />
+          <option value="psutil" />
+          <option value="pyarrow" />
+          <option value="pycparser" />
+          <option value="pydeck" />
+          <option value="PyJWT" />
+          <option value="PyMySQL" />
+          <option value="PyNaCl" />
+          <option value="pynput" />
+          <option value="pyparsing" />
+          <option value="pytest" />
+          <option value="pytest-cov" />
+          <option value="PyYAML" />
+          <option value="referencing" />
+          <option value="requests" />
+          <option value="rich" />
+          <option value="rpds-py" />
+          <option value="schedule" />
+          <option value="scikit-learn" />
+          <option value="scipy" />
+          <option value="seaborn" />
+          <option value="smmap" />
+          <option value="sshtunnel" />
+          <option value="streamlit" />
+          <option value="tenacity" />
+          <option value="threadpoolctl" />
+          <option value="toml" />
+          <option value="tomli" />
+          <option value="tornado" />
+          <option value="tzlocal" />
+          <option value="urllib3" />
+          <option value="waitress" />
+          <option value="watchdog" />
+          <option value="XlsxWriter" />
+          <option value="yarl" />
+          <option value="zipp" />
+          <option value="annotated-types" />
+          <option value="colorlog" />
+          <option value="prometheus-client" />
+          <option value="pydantic" />
+          <option value="pydantic_core" />
+          <option value="python-dotenv" />
+          <option value="xlsxwriter" />
+          <option value="zstandard" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="false" level="INFORMATION" enabled_by_default="false" />
+    <inspection_tool class="PyPep8NamingInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyStubPackagesAdvertiser" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="pandas-stubs==3.0.5.260730" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="bool.*" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
+  </profile>
+</component>

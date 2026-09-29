@@ -6,7 +6,7 @@ The MVP unifies meters and transformers in `asset` with a kind discriminator. As
 
 Interval, aggregate, balance and evaluation tables contain current query projections. Changed interval/balance/anomaly evidence is appended to `projection_revision` before updating the current row. Raw reading IDs and configuration IDs in interval evidence preserve calculation lineage. The production design proposes more fully normalized revision tables and immutable baseline snapshots; the MVP stores those summaries in evidence JSON.
 
-Inbox insertion, domain mutation and outbox insertion commit in one transaction. Session-per-transaction and READ COMMITTED isolation avoid stale snapshots after lock waits. All workers serialize changes by asset using row locks. Outbox publishers use SKIP LOCKED and a bounded confirm transaction; see implementation-status.md for the lease-relay optimization still planned.
+Inbox insertion, domain mutation and outbox insertion commit in one transaction. Session-per-transaction and READ COMMITTED isolation avoid stale snapshots after lock waits. All workers serialize changes by asset using row locks. Outbox publishers use SKIP LOCKED and a bounded confirm transaction. The pending relay query is indexed by `(owner, sent, created_at, id)` so each owner claims its next batch without locking historical rows from other owners; see implementation-status.md for the lease-relay optimization still planned.
 
 Grafana reads only seven curated views through its dedicated database user. MySQL tables use foreign keys and unique constraints and remain unpartitioned. No Kafka position is stored as business data; failed transport coordinates are diagnostic quarantine metadata.
 

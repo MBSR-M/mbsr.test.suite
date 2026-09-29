@@ -4,7 +4,6 @@ import hmac
 import inspect
 import io
 import logging
-import secrets
 from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
@@ -13,6 +12,7 @@ from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Query, Request
 from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -25,21 +25,57 @@ from opengrid.config import settings
 from opengrid.contracts import CaseUpdate
 from opengrid.contracts.common import SuccessResponse
 from opengrid.contracts.dashboard import DashboardContract, DashboardFilterContract
-from opengrid.contracts.feeder import FeederContract, FeederSummaryContract, FeederTopologyContract, FeederTrendContract
-from opengrid.read_contracts import canonical_dashboard, canonical_feeder, feeder_summary, feeder_topology, feeder_trends
+from opengrid.contracts.errors import ErrorCode, ErrorDetailContract, ErrorResponse
+from opengrid.contracts.feeder import (
+    FeederContract,
+    FeederSummaryContract,
+    FeederTopologyContract,
+    FeederTrendContract,
+)
 from opengrid.db import Feeder, Job
 from opengrid.product_models import FollowUp, InvestigationNote, User
-from opengrid.services import Conflict
+from opengrid.read_contracts import (
+    canonical_dashboard,
+    canonical_feeder,
+    feeder_summary,
+    feeder_topology,
+    feeder_trends,
+)
 from opengrid.ui_auth import (
-    COOKIE_NAME, RESOLUTIONS, ROLES, add_note, authenticate, clear_session_cookie,
-    complete_follow_up, create_follow_up, create_operator_case, create_session, create_user,
-    issue_login_csrf, public_user, require_permission, revoke_session, safe_next,
-    session_user, set_session_cookie, update_operator_case, verify_csrf, verify_login_csrf,
+    COOKIE_NAME,
+    RESOLUTIONS,
+    ROLES,
+    add_note,
+    authenticate,
+    clear_session_cookie,
+    complete_follow_up,
+    create_follow_up,
+    create_operator_case,
+    create_session,
+    create_user,
+    issue_login_csrf,
+    public_user,
+    require_permission,
+    revoke_session,
+    safe_next,
+    session_user,
+    set_session_cookie,
+    update_operator_case,
+    verify_csrf,
+    verify_login_csrf,
 )
 
 ROOT = Path(__file__).parent
 templates = Jinja2Templates(directory=str(ROOT / "templates"))
 router = APIRouter()
+CANONICAL_ERROR_RESPONSES = {
+    400: {"model": ErrorResponse},
+    401: {"model": ErrorResponse},
+    403: {"model": ErrorResponse},
+    404: {"model": ErrorResponse},
+    422: {"model": ErrorResponse},
+    500: {"model": ErrorResponse},
+}
 
 
 def fmt(value, digits=1, suffix=""):
@@ -75,6 +111,7 @@ def identity(request: Request, s=Depends(database, scope="function")):
     # Keep the template identity detached from the request transaction.  This
     # also lets an error page render after dependency cleanup.
     request.state.user_context = public_user(auth[0])
+    request.state.csrf_token = auth[1].csrf_token
     return auth[0]
 
 
@@ -91,12 +128,15 @@ def context(request, **extra):
     template_user = getattr(request.state, "user_context", None)
     if template_user is None and user:
         template_user = public_user(user)
+    csrf_token = getattr(request.state, "csrf_token", None)
+    if csrf_token is None and browser:
+        csrf_token = browser.csrf_token
     def url(**changes):
         params = dict(request.query_params)
         params.update(changes)
         return request.url.path + "?" + urlencode({k: v for k, v in params.items() if v is not None and v != ""})
     return {"request": request, "user": template_user,
-            "csrf_token": browser.csrf_token if browser else "", "grafana_url": settings().grafana_url,
+            "csrf_token": csrf_token or "", "grafana_url": settings().grafana_url,
             "app_version": "0.2.0", "active_page": request.url.path.strip("/").split("/")[0],
             "query": request.query_params, "url": url, "request_id": getattr(request.state, "request_id", ""), **extra}
 
@@ -119,7 +159,7 @@ def call_query(function, s, request, **overrides):
 
 
 def chart(trend, meter=False):
-    points = trend.get("points", [])
+    points = jsonable_encoder(trend.get("points", []))
     series = [("input_kwh", "Transformer input", "#168b89"), ("downstream_kwh", "Downstream energy", "#5976cf"),
               ("unaccounted_kwh", "Accounting difference", "#dc9232")]
     if meter:
@@ -162,6 +202,19 @@ def v2_filters(
         severity=severity,
         granularity=granularity,
     )
+
+
+def canonical_api_error(request: Request, status: int, code: ErrorCode, message: str, details=None):
+    request_id = getattr(request.state, "request_id", None) or str(uuid4())
+    body = ErrorResponse(
+        error=ErrorDetailContract(
+            code=code,
+            message=message[:500],
+            details=details or {},
+            request_id=UUID(request_id),
+        )
+    )
+    return JSONResponse(status_code=status, content=jsonable_encoder(body))
 
 
 TABLES = {
@@ -516,7 +569,7 @@ def case_timeline(request: Request, case_id: int, user=Depends(api_identity), s=
 
 # Version 2 exposes canonical Pydantic read contracts. Version 1 retains its
 # original compact payloads for installed API-key clients.
-@router.get("/api/v2/dashboard", response_model=SuccessResponse[DashboardContract])
+@router.get("/api/v2/dashboard", response_model=SuccessResponse[DashboardContract], responses=CANONICAL_ERROR_RESPONSES)
 def canonical_dashboard_api(
     request: Request,
     from_time: datetime,
@@ -532,7 +585,7 @@ def canonical_dashboard_api(
     return SuccessResponse(data=canonical_dashboard(s, filters), request_id=UUID(request.state.request_id))
 
 
-@router.get("/api/v2/feeders/{feeder_id}", response_model=SuccessResponse[FeederContract])
+@router.get("/api/v2/feeders/{feeder_id}", response_model=SuccessResponse[FeederContract], responses=CANONICAL_ERROR_RESPONSES)
 def canonical_feeder_api(
     request: Request,
     feeder_id: int,
@@ -545,7 +598,7 @@ def canonical_feeder_api(
     return SuccessResponse(data=item, request_id=UUID(request.state.request_id))
 
 
-@router.get("/api/v2/feeders/{feeder_id}/summary", response_model=SuccessResponse[FeederSummaryContract])
+@router.get("/api/v2/feeders/{feeder_id}/summary", response_model=SuccessResponse[FeederSummaryContract], responses=CANONICAL_ERROR_RESPONSES)
 def canonical_feeder_summary_api(
     request: Request,
     feeder_id: int,
@@ -561,7 +614,7 @@ def canonical_feeder_summary_api(
     return SuccessResponse(data=item, request_id=UUID(request.state.request_id))
 
 
-@router.get("/api/v2/feeders/{feeder_id}/trends", response_model=SuccessResponse[FeederTrendContract])
+@router.get("/api/v2/feeders/{feeder_id}/trends", response_model=SuccessResponse[FeederTrendContract], responses=CANONICAL_ERROR_RESPONSES)
 def canonical_feeder_trends_api(
     request: Request,
     feeder_id: int,
@@ -577,7 +630,7 @@ def canonical_feeder_trends_api(
     return SuccessResponse(data=item, request_id=UUID(request.state.request_id))
 
 
-@router.get("/api/v2/feeders/{feeder_id}/topology", response_model=SuccessResponse[FeederTopologyContract])
+@router.get("/api/v2/feeders/{feeder_id}/topology", response_model=SuccessResponse[FeederTopologyContract], responses=CANONICAL_ERROR_RESPONSES)
 def canonical_feeder_topology_api(
     request: Request,
     feeder_id: int,
@@ -603,6 +656,10 @@ def install_ui(app):
             response = await call_next(request)
         except Exception:
             logging.exception("request failed request_id=%s", request.state.request_id)
+            if request.url.path.startswith("/api/v2/"):
+                return canonical_api_error(
+                    request, 500, ErrorCode.INTERNAL_ERROR, "Unable to complete the request."
+                )
             if request.url.path.startswith("/api/"):
                 return JSONResponse(status_code=500, content={"error": {"code": "INTERNAL_ERROR", "message": "Unable to complete the request.", "request_id": request.state.request_id}})
             response = render(request, "error.html", status=500, status_code=500, error_title="Unable to complete this request", error_message="Please try again. Contact your administrator if the issue continues.")
@@ -617,6 +674,13 @@ def install_ui(app):
 
     @app.exception_handler(StarletteHTTPException)
     async def http_error(request, error):
+        if request.url.path.startswith("/api/v2/"):
+            code = {
+                401: ErrorCode.AUTHENTICATION_REQUIRED,
+                403: ErrorCode.AUTHORIZATION_FAILED,
+                404: ErrorCode.NOT_FOUND,
+            }.get(error.status_code, ErrorCode.INVALID_REQUEST)
+            return canonical_api_error(request, error.status_code, code, str(error.detail))
         if request.url.path.startswith("/api/"):
             return JSONResponse(status_code=error.status_code, content={"detail": error.detail})
         if error.status_code == 401 and request.method == "GET":
@@ -631,7 +695,25 @@ def install_ui(app):
     @app.exception_handler(SQLAlchemyError)
     async def database_error(request, error):
         logging.exception("database request failed request_id=%s", request.state.request_id)
+        if request.url.path.startswith("/api/v2/"):
+            return canonical_api_error(
+                request, 503, ErrorCode.DATABASE_ERROR, "Database service is temporarily unavailable."
+            )
         return await http_error(request, HTTPException(503, "Database service is temporarily unavailable."))
+
+    @app.exception_handler(RequestValidationError)
+    async def request_validation_error(request, error):
+        if request.url.path.startswith("/api/v2/"):
+            details = {
+                "issues": [
+                    {"location": ".".join(str(part) for part in item["loc"]), "message": item["msg"]}
+                    for item in error.errors()[:20]
+                ]
+            }
+            return canonical_api_error(
+                request, 422, ErrorCode.VALIDATION_ERROR, "Request validation failed.", details
+            )
+        return JSONResponse(status_code=422, content={"detail": jsonable_encoder(error.errors())})
 
 
 def ui_error(request, message, status):

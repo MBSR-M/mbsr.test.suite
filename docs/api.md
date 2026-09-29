@@ -2,6 +2,22 @@
 
 Both API processes expose the same FastAPI contract. Use port 8000 for metadata, analytics and investigations; port 8001 for reading ingestion. A production proxy should route `/api/v1/readings/*` to ingestion. Interactive OpenAPI is at `/docs`.
 
+The authenticated operator UI is at `http://localhost:8000/login`. It uses its own local user/session store, CSRF-protected forms and role permissions; it does not expose or reuse API keys in the browser. The initial administrator credentials are `UI_ADMIN_USERNAME` and `UI_ADMIN_PASSWORD` in the private local `.env` file. Dashboard, feeder, transformer, meter, investigation, quality, event, topology, simulator and system-health views are server rendered and use bounded backend read models.
+
+## Canonical read API (v2)
+
+Released `/api/v1` response shapes remain unchanged for existing clients. The additive `/api/v2` namespace supplies explicit, versioned Pydantic contracts and a common response envelope:
+
+```json
+{"schema_version": 1, "data": {}, "request_id": "uuid"}
+```
+
+`GET /api/v2/dashboard` requires `from_time`, `to_time` and accepts repeated `feeder_ids`, `transformer_ids`, `severity`, plus `granularity` (`15m`, `1h`, or `1d`). Ranges are UTC, half-open and limited to 90 days / 3,000 points. It returns the authoritative summary, trend, health, priority entities, quality and activity model in one bounded response.
+
+`GET /api/v2/feeders/{id}` returns feeder identity and hierarchy counts. `.../summary` and `.../trends` require the same `from_time`, `to_time` and optional `granularity`; `.../topology` supports bounded `page` and `page_size`. These endpoints use `SuccessResponse` and concrete Feeder/Dashboard contracts in OpenAPI.
+
+Canonical API errors have a stable envelope with an error code, safe details and request ID. For example, an invalid time range returns `422` with `VALIDATION_ERROR` or `INVALID_REQUEST`; a missing resource returns `404` with `NOT_FOUND`. See [data contracts](data-contracts.md) for field semantics and JSON examples.
+
 Write authentication: `X-API-Key: <API_KEY>`. Read authentication accepts READ_API_KEY or API_KEY; public reads are off by default. Numeric database IDs are distinct from external `entity_code` strings. Time filters require explicit offsets. Decimal quantities serialize as strings.
 
 Create a transformer with `code` and an aligned UTC `valid_from`. Create meters with their `transformer_id`, `multiplier`, `import_only` and `valid_from`. The multiplier defaults to 1. Metadata PUT changes name/active only. Historical assignment changes use POST `/api/v1/meters/{id}/assignments` with `transformer_id` and `valid_from`; this closes the current assignment and rebuilds existing affected aggregates.

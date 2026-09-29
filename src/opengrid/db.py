@@ -6,6 +6,7 @@ from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
@@ -195,6 +196,9 @@ class Audit(Base):
 
 class Outbox(Base):
     __tablename__ = "outbox"
+    __table_args__ = (
+        Index("ix_outbox_owner_sent_created_at_id", "owner", "sent", "created_at", "id"),
+    )
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     owner: Mapped[str] = mapped_column(String(32), index=True)
     topic: Mapped[str] = mapped_column(String(100))
