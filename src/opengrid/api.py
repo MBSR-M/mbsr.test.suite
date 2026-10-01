@@ -136,9 +136,9 @@ def health():
 @app.get("/ready")
 def ready(s=Depends(db, scope="function")):
     revision = s.scalar(text("SELECT version_num FROM alembic_version"))
-    if revision != "0002":
+    if revision != "0003":
         raise HTTPException(503, "incompatible database schema")
-    return {"status": "ready", "scope": "database-backed API", "schema": "0002"}
+    return {"status": "ready", "scope": "database-backed API", "schema": "0003"}
 
 
 @app.get("/metrics", dependencies=[Depends(read_auth)])

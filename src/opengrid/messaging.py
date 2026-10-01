@@ -5,7 +5,7 @@ import time
 import pika
 from confluent_kafka import Producer
 from confluent_kafka.admin import AdminClient, NewTopic
-from sqlalchemy import select
+from sqlalchemy import false, select
 
 from opengrid.config import settings
 from opengrid.db import Outbox
@@ -73,10 +73,17 @@ def relay_once(factory, owner, client):
     with factory.begin() as s:
         rows = s.scalars(
             select(Outbox)
-            .where(Outbox.owner == owner, Outbox.sent.is_(False))
+            .where(Outbox.owner == owner, Outbox.sent == false())
             .order_by(Outbox.created_at, Outbox.id)
             .limit(100)
             .with_for_update(skip_locked=True)
+            # MySQL otherwise may prefer either single-column index and lock a
+            # large historical range before it reaches the bounded batch.
+            .with_hint(
+                Outbox,
+                "FORCE INDEX (ix_outbox_owner_sent_created_at_id)",
+                dialect_name="mysql",
+            )
         ).all()
         for row in rows:
             body = json.dumps(row.payload).encode()

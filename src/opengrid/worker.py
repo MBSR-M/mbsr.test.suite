@@ -183,6 +183,15 @@ def reconciliation_loop(factory, stop):
                 if not checkpoint:
                     checkpoint = Heartbeat(service="scheduler", time=boundary - STEP, processed=0)
                     s.add(checkpoint)
+                # Reconciliation is a near-real-time safety net, not an
+                # unbounded historical backfill. A stale checkpoint would
+                # otherwise create a growing recompute backlog after downtime.
+                if checkpoint.time < boundary - 4 * STEP:
+                    logging.warning(
+                        "scheduler checkpoint was stale; resuming recent window",
+                        extra={"service": "scheduler"},
+                    )
+                    checkpoint.time = boundary - 4 * STEP
                 start = checkpoint.time
                 end = min(boundary, start + 4 * STEP)
                 transformers = s.scalars(
